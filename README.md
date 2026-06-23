@@ -38,16 +38,18 @@ Praxis 的 skill（通用引擎，留白挂载点）
 
 这样同一套引擎能服务任何项目，而你的项目隐私永远留在你自己仓库里。
 
-## ⭐ 维护者私心力荐
+## 🐎 三驾马车（Core Trio）
 
-如果你只想先试一个组合，从这两个开始——它们是「大任务不失控」的命门，也是我自己用得最多的搭配：
+整个库的脊梁是这三套，串起来就是 AI 驱动开发的「**规划 → 治理 → 把关**」闭环：
 
-- **[task-control-doc](docs/task-control-doc.md)** —— 先把一个跨多次会话的大任务，拆成一个个**自包含工作包**（图纸）。
-- **[control](docs/control.md)** —— 再让 AI 照图纸**严格逐格施工**：一次只动一个子任务，做完即停、绝不越界。
+1. **总控** · [task-control-doc](docs/task-control-doc.md) + [control](docs/control.md) —— ⭐ **维护者最爱**
+   先把跨多次会话的大任务拆成**自包含工作包**（图纸），再让 AI **严格逐格施工**：一次只动一个子任务、做完即停、绝不越界。AI 上下文再满不失忆、范围再大不跑偏。
+2. **七层文档** · [doc-layer-system](docs/doc-layer-system.md) —— 项目招牌
+   给代码与文档建立分层治理，让两者永不脱节；死亡线区域强制真人把关。
+3. **对抗评审** · [adversarial-review](docs/adversarial-review.md)
+   同一份方案，Claude 和 GPT 各出一份独立评审，再由裁判逐条裁决——定稿前的一道硬关卡。
 
-「先拆图纸、再按格施工」——AI 上下文再满也不会失忆，范围再大也不会跑偏。
-
-> 招牌（最能代表项目的）是 [doc-layer-system](docs/doc-layer-system.md)；这两个是维护者私心最爱。
+> 只想先试一个？从 **总控** 开始。
 
 ## 安装
 
@@ -74,7 +76,7 @@ cp -R skills/adversarial-review ~/.claude/skills/
 ### 📐 文档体系
 | Skill | 一句话 | 用在什么场景 |
 |-------|--------|------------|
-| [doc-layer-system](docs/doc-layer-system.md) | 七层文档体系引擎（招牌） | 想给项目建立"代码与文档不脱节"的分层治理体系 |
+| [doc-layer-system](docs/doc-layer-system.md) | 七层文档体系引擎 🐎 三驾马车·招牌 | 想给项目建立"代码与文档不脱节"的分层治理体系 |
 | [docs-from-code](docs/docs-from-code.md) | 从代码反推 L1 需求文档 | 老项目没需求文档，要从现有代码补回来 |
 | [long-doc-governance](docs/long-doc-governance.md) | 长文档拆分治理 | 单个文档越写越长、该拆了 |
 
@@ -93,13 +95,13 @@ cp -R skills/adversarial-review ~/.claude/skills/
 ### ⚖️ 评审
 | Skill | 一句话 | 用在什么场景 |
 |-------|--------|------------|
-| [adversarial-review](docs/adversarial-review.md) | Claude×GPT 双独立评审 + 裁判 | 重要方案/代码定稿前，要一份经得起挑战的评审 |
+| [adversarial-review](docs/adversarial-review.md) | Claude×GPT 双独立评审 + 裁判 🐎 三驾马车 | 重要方案/代码定稿前，要一份经得起挑战的评审 |
 
 ### 🧭 任务编排
 | Skill | 一句话 | 用在什么场景 |
 |-------|--------|------------|
-| [task-control-doc](docs/task-control-doc.md) | 大任务总控文档方法论 ⭐ 维护者私心力荐 | 一个跨多次会话的大任务，要先拆成自包含工作包 |
-| [control](docs/control.md) | 总控执行引擎（严格单子任务）⭐ 维护者私心力荐 | 照着总控文档逐个子任务推进，做完即停、不越界 |
+| [task-control-doc](docs/task-control-doc.md) | 大任务总控文档方法论 🐎 三驾马车 · ⭐ 维护者最爱 | 一个跨多次会话的大任务，要先拆成自包含工作包 |
+| [control](docs/control.md) | 总控执行引擎（严格单子任务）🐎 三驾马车 · ⭐ 维护者最爱 | 照着总控文档逐个子任务推进，做完即停、不越界 |
 
 ### 📨 派活问询
 | Skill | 一句话 | 用在什么场景 |
