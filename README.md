@@ -38,6 +38,17 @@ Praxis 的 skill（通用引擎，留白挂载点）
 
 这样同一套引擎能服务任何项目，而你的项目隐私永远留在你自己仓库里。
 
+## ⭐ 重点推荐
+
+如果你只想先试一个组合，从这两个开始——它们是「大任务不失控」的命门，也是我自己用得最多的搭配：
+
+- **[task-control-doc](docs/task-control-doc.md)** —— 先把一个跨多次会话的大任务，拆成一个个**自包含工作包**（图纸）。
+- **[control](docs/control.md)** —— 再让 AI 照图纸**严格逐格施工**：一次只动一个子任务，做完即停、绝不越界。
+
+「先拆图纸、再按格施工」——AI 上下文再满也不会失忆，范围再大也不会跑偏。
+
+> 招牌（最能代表项目的）是 [doc-layer-system](docs/doc-layer-system.md)；这两个是重点能力。
+
 ## 安装
 
 把 `skills/` 下你需要的目录拷进 Claude Code 的 skill 目录：
@@ -87,8 +98,8 @@ cp -R skills/adversarial-review ~/.claude/skills/
 ### 🧭 任务编排
 | Skill | 一句话 | 用在什么场景 |
 |-------|--------|------------|
-| [task-control-doc](docs/task-control-doc.md) | 大任务总控文档方法论 | 一个跨多次会话的大任务，要先拆成自包含工作包 |
-| [control](docs/control.md) | 总控执行引擎（严格单子任务） | 照着总控文档逐个子任务推进，做完即停、不越界 |
+| [task-control-doc](docs/task-control-doc.md) | 大任务总控文档方法论 ⭐ 重点推荐 | 一个跨多次会话的大任务，要先拆成自包含工作包 |
+| [control](docs/control.md) | 总控执行引擎（严格单子任务）⭐ 重点推荐 | 照着总控文档逐个子任务推进，做完即停、不越界 |
 
 ### 📨 派活问询
 | Skill | 一句话 | 用在什么场景 |
