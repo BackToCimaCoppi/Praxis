@@ -1,0 +1,7 @@
+interface:
+  display_name: "提交代码"
+  short_description: "按仓库规范提交并可选推送"
+  default_prompt: "使用 $commit-changes 检查当前变更并按仓库规范提交。"
+
+policy:
+  allow_implicit_invocation: false
