@@ -5,7 +5,7 @@
 
 ![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
 ![Docs](https://img.shields.io/badge/docs-简体中文-red.svg)
-![Skills](https://img.shields.io/badge/skills-15-green.svg)
+![Skills](https://img.shields.io/badge/skills-16-green.svg)
 
 ---
 
@@ -85,6 +85,7 @@ cp -R skills/adversarial-review ~/.claude/skills/
 |-------|--------|------------|
 | [code-to-7layer](docs/code-to-7layer.md) | 从代码反推七层文档骨架总控 | 接手一个没文档的项目，想系统性补全文档体系 |
 | [code-to-guide](docs/code-to-guide.md) | 从代码生成 AI 友好项目导览 | 想让 AI（或新人）快速摸清一个陌生代码库 |
+| [legacy-archaeology](docs/legacy-archaeology.md) | 老代码反推「业务/库/接口」三层下钻知识库 | 重构老系统前，要把黑盒老项目翻译成给 AI 注入背景的知识库 |
 
 ### ✏️ 设计 / 施工
 | Skill | 一句话 | 用在什么场景 |
