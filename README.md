@@ -158,6 +158,11 @@ cp -R skills/adversarial-review ~/.claude/skills/
 | [commit-changes](docs/commit-changes.md) | 受控提交流程 | 想要"看 diff、逐文件确认、规范信息"的安全提交 |
 | [git-worktree](docs/git-worktree.md) | 多 worktree 生命周期管理 | 多分支并行开发，要管 worktree 的建/合/同步/清 |
 
+## 升级 / 变更日志
+
+已经装过旧版本？升级前先看 [CHANGELOG.md](CHANGELOG.md)——**v2.0.0 含破坏性变更**
+（删除了 3 个 skill、对抗评审取消独立裁判轮、轻量设计从「事后回补」改为「事前物化」）。
+
 ## 贡献
 
 欢迎补充新 skill。为保持全库格式统一（skill 结构、文档四段式、脱敏纪律），
