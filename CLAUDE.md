@@ -55,14 +55,23 @@
 - [ ] 跨 skill 引用为同级相对路径，无绝对路径
 - [ ] 已写 `docs/<名>.md`，四段式齐全
 - [ ] `README.md` 总表已加对应行
-- [ ] 脱敏自查：对全部新增/改动文件跑下面这条 grep，零命中
+- [ ] 脱敏自查：对全部新增/改动文件跑下面三条，零命中
 
   ```bash
-  grep -rnE '密钥|password|token|secret|/Users/|/home/|sk-[A-Za-z0-9]{8,}|AKIA[0-9A-Z]{12,}' \
-    skills/ docs/ README.md
+  # ① 私有名词（换成你自己/你公司不希望出现的词，含私有业务域词）
+  grep -rnE '你的昵称|你的项目代号|你的公司名|你的私有业务域词' skills/ docs/ README.md
+
+  # ② 真实凭据：只拦「词后面跟着真实值」与高置信度密钥前缀
+  grep -rnE '(password|passwd|secret|token|api[_-]?key|private[_-]?key|密钥|凭证)[[:space:]]*[:=][[:space:]]*["'"'"']?[A-Za-z0-9_/+.-]{12,}|sk-[A-Za-z0-9_-]{12,}|AKIA[0-9A-Z]{12,}|gh[pousr]_[A-Za-z0-9]{20,}|AIza[A-Za-z0-9_-]{30,}|-----BEGIN[A-Z ]*PRIVATE KEY-----' skills/ docs/ README.md
+
+  # ③ 本机绝对路径（前置边界，避免 pages/home/ 这类误报）
+  grep -rnE '(^|[^A-Za-z0-9])/(Users|home)/[A-Za-z0-9._-]+' skills/ docs/ README.md
   ```
 
-  （再加上你/你公司不希望出现的私有名词，按需扩充黑名单）
+  > **为什么第 ② 条不直接字面拦 `token` / `密钥` / `secret`**：这些在技术文档里是高频普通名词——
+  > 讲 LLM 的 token 消耗、讲 CSS 设计 token、举例「鉴权/密钥相关代码属高风险区域」，全是正常内容。
+  > 字面拦截会让自查每次命中一堆误报；人一旦习惯性忽略它，这道检查就等于不存在。
+  > **要拦的是「词后面跟着一串真实值」，不是这个词本身。**
 
 ## 5. 修改既有 Skill
 
