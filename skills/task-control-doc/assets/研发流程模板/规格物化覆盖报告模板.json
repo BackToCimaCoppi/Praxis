@@ -1,0 +1,99 @@
+{
+  "schema_version": 2,
+  "task": "T{n}-{任务名}",
+  "final_truth_slice": "用业务能力描述本任务最终真值切片，不写文件白名单",
+  "design_index_hash": "sha256:{64位哈希}",
+  "spec_hash": "sha256:{test_specs有序列表的聚合哈希}",
+  "materialization_pass": true,
+  "semantic_uniqueness_pass": true,
+  "satisfiability_pass": true,
+  "decision_provenance_pass": true,
+  "semantic_diff_pass": true,
+  "layers": {
+    "L1": {"status": "updated", "evidence": ["docs/01-.../文件.md#小节"]},
+    "L2": {"status": "verified_no_change", "evidence": ["docs/02-.../文件.md#小节"]},
+    "L3": {"status": "not_applicable", "evidence": [], "reason": "唯一且可复核的不适用理由"},
+    "L4": {"status": "not_applicable", "evidence": [], "reason": "唯一且可复核的不适用理由"},
+    "L5": {"status": "updated", "evidence": ["docs/05-.../文件.md#小节"]},
+    "L6": {"status": "updated", "evidence": ["docs/06-.../文件.md#小节"]},
+    "L7": {"status": "updated", "evidence": ["docs/07-.../文件.md#AC-1"]}
+  },
+  "design_items": [
+    {
+      "id": "SD-1",
+      "type": "业务规则",
+      "statement": "完整、可独立理解的规范性语义",
+      "decision_refs": ["DP-1"],
+      "provenance_refs": ["DEC-1"],
+      "formal_spec_refs": ["docs/01-.../文件.md#小节", "docs/06-.../文件.md#小节"],
+      "ac_refs": ["AC-1"]
+    }
+  ],
+  "assertions": [
+    {
+      "id": "AC-1",
+      "design_refs": ["SD-1"],
+      "provenance_refs": ["DEC-1"],
+      "formal_spec_refs": ["docs/01-.../文件.md#小节"],
+      "l7_ref": "docs/07-.../文件.md#AC-1"
+    }
+  ],
+  "test_specs": [
+    {"path": "docs/07-.../文件.md", "spec_hash": "sha256:{64位哈希}"}
+  ],
+  "user_decisions": [
+    {
+      "id": "DEC-1",
+      "source": "docs/00-任务总控/{任务目录}/_shared/用户裁决记录.md#DEC-1",
+      "applies_to": ["SD-1", "AC-1"]
+    }
+  ],
+  "satisfiability_checks": [
+    {
+      "id": "SAT-1",
+      "requirement_refs": ["SD-1", "AC-1"],
+      "input_refs": ["docs/03-.../文件.md#小节"],
+      "no_input_reason": "",
+      "persistence_refs": ["docs/04-.../文件.md#小节"],
+      "no_persistence_reason": "",
+      "result": "pass"
+    }
+  ],
+  "semantic_topics": [
+    {
+      "id": "TOPIC-1",
+      "question": "本主题只回答的一个问题",
+      "positive_rule": "唯一生效的正向规则",
+      "forbidden_outcomes": ["至少一个明确禁止的反向结果"],
+      "boundary": "生效时刻/入口/平台/并发/失败与超时边界",
+      "failure_closure": "失败后的唯一收口结果",
+      "formal_spec_refs": ["docs/01-.../文件.md#小节", "docs/06-.../文件.md#小节"],
+      "provenance_refs": ["SD-1", "DEC-1"]
+    }
+  ],
+  "no_semantic_topics_reason": "semantic_topics 非空时留空；为空时说明本切片为何没有可改变业务结果的问题",
+  "semantic_diff": [
+    {
+      "id": "SEM-1",
+      "change": "新增 / 删除 / 改写的业务结果",
+      "before": "评审前语义",
+      "after": "最终正式语义",
+      "provenance_refs": ["DEC-1"],
+      "formal_spec_refs": ["docs/01-.../文件.md#小节"]
+    }
+  ],
+  "no_semantic_change_reason": "semantic_diff 非空时留空；为空时填写可复核的无变化理由",
+  "review_closures": [
+    {
+      "review_id": "REV-{阶段}-{对象哈希前缀}",
+      "object_hash": "sha256:{64位哈希}",
+      "truth_baseline_hash": "sha256:{64位哈希}",
+      "closure_scope_hash": "sha256:{64位哈希}",
+      "report_ref": "docs/00-任务总控/{任务目录}/_shared/T{n}-对抗评审报告.md",
+      "status": "PASS"
+    }
+  ],
+  "no_open_review_reason": "review_closures 非空时留空；为空时说明本阶段为何没有开放评审",
+  "known_in_scope_debt": [],
+  "out_of_scope_debt": []
+}
