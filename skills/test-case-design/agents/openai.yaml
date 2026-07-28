@@ -1,0 +1,4 @@
+interface:
+  display_name: "测试用例设计"
+  short_description: "用于生成白盒链路与黑盒业务并重的高质量冻结测试用例规格"
+  default_prompt: "Use $test-case-design to write frozen white-box and black-box test cases for this feature."
