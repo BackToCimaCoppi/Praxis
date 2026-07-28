@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>设计预览 — {{标题}}</title>
+<style>
+  /*
+   * 像素级还原原理（必读，勿改基准）：
+   * - 小程序 750rpx = 屏宽；iPhone 逻辑分辨率基准 375×812。
+   * - 本模板把「舞台 .stage」做成 750px 宽，整体 transform: scale(0.5)，
+   *   渲染出来正好 375px 宽。于是 .scss 里的 rpx 数值可以「1:1 当 px」直接填进 .stage，
+   *   不需要手算 rpx→px，杜绝换算误差。例：scss 写 border-radius:20rpx → 这里写 border-radius:20px。
+   * - 颜色 / 字号 / 间距 / 投影 / 动画一律照抄 .scss 真值，禁止「差不多」。
+   */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #e9e9ee;
+    font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+    display: flex; flex-wrap: wrap; gap: 32px;
+    justify-content: center; align-items: flex-start;
+    padding: 40px 24px; min-height: 100vh;
+  }
+  .device-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .device-label { font-size: 13px; color: #555; font-weight: 600; text-align: center; }
+  /* 手机外框：375×812 显示区 */
+  .device {
+    width: 375px; height: 812px; border-radius: 44px;
+    background: #000; overflow: hidden; position: relative;
+    box-shadow: 0 12px 40px rgba(0,0,0,.25); border: 2px solid #1a1a1a;
+  }
+  /* 舞台：750 宽，scale(0.5) → 渲染 375 宽；rpx 数值 1:1 当 px 填这里 */
+  .stage {
+    width: 750px; height: 1624px; transform: scale(.5); transform-origin: top left;
+    overflow-y: auto; position: relative; background: #fff;
+  }
+  /* 状态栏（750rpx 空间）—— 示意，可按页面需要删改 */
+  .statusbar {
+    height: 88px; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px; font-size: 30px; font-weight: 600; color: #000; flex-shrink: 0;
+  }
+  /* 自定义导航条占位（小程序 navigationStyle:custom）—— 标准导航页按真值换 */
+  .navbar {
+    height: 88px; display: flex; align-items: center; justify-content: center;
+    font-size: 34px; font-weight: 600; color: #000; flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+  <!-- 一个形态一个 .device-wrap；要并排多变体（A/B/当前 vs 改后），复制多个 .device-wrap 即可 -->
+  <div class="device-wrap">
+    <div class="device-label">形态 {{编号}} · {{说明}}</div>
+    <div class="device">
+      <!-- stage 背景填页面真值背景，如 #f2f2f7 -->
+      <div class="stage" style="background: {{页面背景}};">
+        <div class="statusbar"><span>9:41</span><span>5G&nbsp;&nbsp;100%</span></div>
+        <div class="navbar">{{导航标题，如 MyApp}}</div>
+
+        <!-- ↓↓↓ 页面主体：照 .wxml 结构 + .scss 真值填写（rpx 数值当 px） ↓↓↓ -->
+
+        <!-- ↑↑↑ 页面主体结束 ↑↑↑ -->
+      </div>
+    </div>
+  </div>
+</body>
+</html>
