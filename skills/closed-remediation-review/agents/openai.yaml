@@ -1,0 +1,4 @@
+interface:
+  display_name: "封闭式整改验收"
+  short_description: "固定范围核验评审整改、语义溯源与越界变化并交主线程裁决"
+  default_prompt: "Use $closed-remediation-review to verify the fixed remediation checklist and adjudicate every finding in the main thread."
