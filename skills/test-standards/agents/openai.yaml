@@ -1,0 +1,4 @@
+interface:
+  display_name: "测试规范"
+  short_description: "用于制定每次改动后的测试矩阵、断言深度、数据策略与交付质量闸"
+  default_prompt: "Use $test-standards to decide the required test matrix and quality gate for this change."

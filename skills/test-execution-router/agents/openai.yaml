@@ -1,0 +1,4 @@
+interface:
+  display_name: "测试执行路由"
+  short_description: "用于把冻结测试用例路由到项目执行层、执行矩阵、失败分类和证据收口"
+  default_prompt: "Use $test-execution-router to route frozen test cases to the correct project execution skill."
