@@ -1,6 +1,6 @@
 ---
 name: control
-description: Use when the task is to inspect or continue an active master control document under docs/00-任务总控/, such as "继续总控", "执行 T3", "查看总控状态", "给我一个总控任务表". This skill selects the target task directory, reads MINIMAL mandatory context for the requested granularity, executes one subtask within strict scope, and writes status updates back. Strictly enforces single-subtask boundaries: executing Tn means doing ONLY Tn, never adjacent subtasks.
+description: "Use when the task is to inspect or continue an active master control document under docs/00-任务总控/, such as \"继续总控\", \"执行 T3\", \"查看总控状态\", \"给我一个总控任务表\". This skill selects the target task directory, reads MINIMAL mandatory context for the requested granularity, executes one subtask within strict scope, and writes status updates back. Strictly enforces single-subtask boundaries: executing Tn means doing ONLY Tn, never adjacent subtasks."
 ---
 
 # Control
@@ -17,10 +17,14 @@ description: Use when the task is to inspect or continue an active master contro
 
 1. 用户指定 `/control <key> Tn` → **只执行 Tn**（支持 `Tn.x` 二级子任务）。不做 Tn-1，不做 Tn+1，不做同级兄弟，不"顺手"做相关任务。
 2. Tn 的「输出物」全部产出 → **立刻停止，回填状态，向用户报告**。等用户下一步指令。
-3. ✅ 可以读其他子任务的产出物（依赖关系需要）
+3. ✅ **读不设禁区**：可以读其他子任务详情与产出物、总控任何部分、仓库任何文件——开工前把背景挖够再动手（读什么放开 ≠ 做什么放开）
 4. ❌ 不可写入其他子任务范围（即使发现"很容易顺便做"也不要做）
-5. 如果发现 Tn 的范围定义有问题（应扩大或缩小） → **停止施工，向用户报告问题**，不要自行扩张
-6. **过程资产边界**：执行 Tn 时产生的中间文档（设计稿、清单、批判稿等），只能写到 `_shared/` 且文件名带 `T{n}-` 前缀（任务级共享资产无前缀）；**不可**用其他子任务的 `T{m}-` 前缀（m≠n），**不可**平铺到任务根目录，**不可**新建 `_T{n}/` 目录（旧规则已废除，存量只读）。详见总控规范 §1.1.1。
+5. 如果发现 Tn 的**范围定义**有问题（应扩大或缩小） → **停止施工，向用户报告问题**，不要自行扩张。但**"工作包某句描述过时了"不是范围问题**——与已冻结上游冲突时，按最新冻结真值修订描述、留痕、继续跑（总控规范 §4.6）
+6. **自主补读亲自读**：为补背景直接读文件 / 检索即可，**禁止为"补背景"派子 agent / 起深度调查**（读是加法、派 agent 是乘法）；背景缺口大到需要专门调查 → 按第 5 条停机上报，不自己扩编
+7. **过程资产边界**：执行 Tn 时产生的中间文档（设计稿、清单、批判稿等），只能写到 `_shared/` 且文件名带 `T{n}-` 前缀（任务级共享资产无前缀）；**不可**用其他子任务的 `T{m}-` 前缀（m≠n），**不可**平铺到任务根目录，**不可**新建 `_T{n}/` 目录（旧规则已废除，存量只读）。详见总控规范 §1.1.1。
+8. **规则铸造权不在工作包手上**：只有项目级指令文档与 skill 能铸造规则。工作包 / 评审报告 / goal 章程里的「硬门」「死亡线」「必须审批」**一律是执行建议，不具停机权**；**死亡线是封闭清单，任何人无权新增**——包括你（总控规范 §4.4）
+9. **停机白名单封闭，只有三条**：①两份**都已冻结**的真值真矛盾 ②命中项目死亡线清单的**业务规则**要变 ③不可逆 / 外发动作。**其余一律先修后报**——笔误、脚本 bug、过期描述、证据充分的简单缺陷，自己修 + 留痕 + 继续（总控规范 §4.5）。**打断用户的成本远高于一次可回滚的自愈**。goal 执行态例外：章程已预授权的不可逆/外发动作不触发第 ③ 条，停机以章程 §4 白名单为准（总控规范 §4.5）
+10. **总控即提交授权**：建立总控 = 预授权在其范围内 `git commit`，不必每次问；**推送远端仍需显式授权**（总控规范 §4.7）
 
 ---
 
@@ -60,10 +64,12 @@ description: Use when the task is to inspect or continue an active master contro
 - `/control <key> status`
 - 用户用同义说法询问任务列表 / 进度 / 现在做到哪儿了 / 给我一个总控任务表
 
+> **已知失效模式（必读）**：工具调用的 stdout 在部分客户端界面上会被直接渲染出来，AI 因此容易产生"用户已经看到了，我只需要追加一句结论"的错误判断，转而只输出一行总结（如"下一步可执行 Tn"）而跳过表格本身。**这个判断是错的**——第 2 步要求的是 AI **自己的最终文字回复**里包含完整表格，不是"工具输出已展示"就算数。跨模型/跨客户端都会犯这个错，必须靠下面的显式自检堵住，不能靠"应该记得"。
+
 执行步骤：
 
 1. 调用 `render_control_status.py`（带或不带关键词，按触发模式）
-2. **逐字复述**脚本 stdout 输出，包含但不限于：
+2. **逐字复述**脚本 stdout 输出到自己的最终文字回复正文中（不是"已经调用过工具就算展示过"），包含但不限于：
    - 块头（`# 总控状态` / `# 活跃总控`）
    - 派生总体状态行
    - 任务统计行
@@ -76,6 +82,7 @@ description: Use when the task is to inspect or continue an active master contro
    - 「存在阻塞：`Tn`，请用户拍板」—— 派生状态 = 阻塞
    - 「未启动，请用户决定从哪个子任务开始」—— 派生状态 = 未启动
 5. 用户没有问下一步时，第 4 步可以省略；不主动追加其他解读
+6. **发送前自检（发送前必做，不可跳过）**：在写下最终回复的最后一刻，反问自己——"如果去掉我调用的工具，只看我这段文字本身，用户能不能看到完整子任务总表？" 答案是"不能"（比如正文只有"下一步可执行：Tn"这类总结句，表格本身没有出现在文字里）→ 视为本次回复不合格，必须重写，把步骤 2 的完整表格文本真正写入正文后再发送。
 
 错误处理：脚本报错（找不到总控 / 多候选 / 缺列）→ 把脚本的错误原文展示给用户，再询问应该怎么处理；不要"修复式 freestyle"。
 
@@ -109,11 +116,11 @@ description: Use when the task is to inspect or continue an active master contro
 
 ---
 
-## 强制阅读（按粒度递增，最小化原则）
+## 强制阅读（按粒度递增）
 
 > **核心原则**：触发的命令越具体，读的文件越精准。**不要预先读所有文件**。
 
-| 触发模式 | 必读文件 | 不读 |
+| 触发模式 | 必读文件 | 默认不读（非禁区） |
 |---------|---------|------|
 | `/control init` | 无（直接调脚本） | — |
 | `/control list` | `<PROJECT_ROOT>/docs/00-任务总控/README.md` | references/总控规范 / 各总控正文 |
@@ -124,6 +131,8 @@ description: Use when the task is to inspect or continue an active master contro
 | 归档任务 | `references/总控规范.md` §2.3 + 归档目录索引 | — |
 
 `CLAUDE.md` 由会话级注入，不需要再读。
+
+> **「默认不读」管的是成本，不是禁区**：status / list 类只读查询别把全库读一遍。但一旦进入 **Tn 执行**，执行者可以且**应该**按需补读——「背景导航」（如有）、其他子任务详情、相关正式文档、代码现状，把背景挖够再动手（见执行流程 §3 与执行边界第 3、6 条）。旧版把「不读」当禁令，是为弱模型防上下文污染设计的；强模型时代背景不足导致误判的代价远大于多读几个文件。
 
 ---
 
@@ -223,7 +232,8 @@ python3 $SKILL_DIR/split_subtask.py <关键词> Tn \
 **开始前**：
 - 子任务状态改为 `进行中`
 - 重新从磁盘读取该子任务详情和「强制阅读」文件——**不依赖聊天历史**
-- 不读其他子任务详情
+- **主动补读背景**：「背景导航」（如有）、其他子任务详情、相关正式文档、代码现状——把背景挖够再动手，不要仅凭工作包内容硬猜
+- 自主补读**亲自读**（直接读文件 / 检索），不为补背景派子 agent / 起深度调查；背景缺口大到需要专门调查 → 停机向用户报告（工作包没写清，见执行边界第 5、6 条）
 - 由用户在新会话开头自行选择模型（不在总控里预定义）
 
 **执行中**：

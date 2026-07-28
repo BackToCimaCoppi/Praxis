@@ -207,7 +207,7 @@ def render(task_dir: Path, doc: Path, picked: Subtask | None, reason: str) -> st
     out.append(f"- 预期输出：{picked.output}")
     out.append("")
     out.append("**执行边界**：只做这一个子任务，做完立刻停止。")
-    out.append("执行前重读子任务详情中的「强制阅读」清单。")
+    out.append("执行前重读子任务详情中的「强制阅读」清单，并主动补读背景（背景导航/其他子任务/相关文档；亲自读，不派子 agent）。")
     out.append("模型选择由你在新会话开头自行决定（用 `/model`）。")
     out.append("")
     out.append("---")
@@ -215,38 +215,65 @@ def render(task_dir: Path, doc: Path, picked: Subtask | None, reason: str) -> st
     return "\n".join(out)
 
 
+def extract_embedded_prompt(text: str) -> str | None:
+    """抽取工作包正文里作者写的「会话启动提示词」代码块。
+
+    工作包内置提示词是单一真值源（含三要素：主体任务/目标终态/边界提要），
+    抽到就原样输出，脚本不再生成第二版本（防两版漂移）。
+    """
+    m = re.search(r"^#{2,4}\s*会话启动提示词[^\n]*\n+```\n(.*?)\n```", text, re.M | re.S)
+    return m.group(1).strip() if m else None
+
+
 def render_session_prompt(task_dir: Path, doc: Path, picked: Subtask) -> str:
-    """生成完整会话启动提示词，可直接复制到新会话。
+    """输出会话启动提示词：优先原样复用工作包内置版；无内置才通用兜底。
 
     自动检测单文件 vs 拆分模式（看 task_dir 下是否有 T{seq}-*.md）。
     """
     doc_rel = doc.relative_to(PROJECT_ROOT)
     split_target = find_subtask_md(task_dir, picked.seq)
+    embedded = None
+    if split_target:
+        embedded = extract_embedded_prompt(split_target.read_text(encoding="utf-8"))
+    else:
+        section = extract_subtask_section(doc, picked.seq)
+        if section:
+            embedded = extract_embedded_prompt(section)
+    if embedded:
+        return (
+            "**📋 会话启动提示词（来自工作包，复制下面这段到新会话）**：\n\n"
+            "```\n"
+            f"{embedded}\n"
+            "```"
+        )
     if split_target:
         target_rel = split_target.relative_to(PROJECT_ROOT)
         body = (
             f"我要执行 {target_rel} 这个子任务（{picked.seq} - {picked.name}）。\n\n"
             f"请按以下步骤：\n"
             f"1. 读取 {target_rel}（本子任务工作包）\n"
-            f"2. 读取该文件「强制阅读」列出的文件\n"
-            f"3. 严格在本子任务范围内执行：做完「要做的事情」、产出「输出物」、通过「完成判定」、遵守「不做什么」\n"
-            f"4. 完成后回填本文件的「当前状态」为已完成、「输出物」为实际产出文件\n"
-            f"5. 同步更新 {task_dir.relative_to(PROJECT_ROOT)}/README.md 子任务总表对应行 + 进展记录\n"
-            f"6. 不要做其他子任务，做完立刻停止并向我报告"
+            f"2. 读取该文件「强制阅读」列出的文件；再主动补读「背景导航」和你自己判断需要的背景（父级 README、其他子任务、相关正式文档、代码现状），把背景挖够再动手\n"
+            f"3. 自主补读必须亲自读（直接读文件/检索），不要为补背景派子 agent 或起深度调查\n"
+            f"4. 严格在本子任务范围内执行：做完「要做的事情」、产出「输出物」、通过「完成判定」、遵守「不做什么」——读什么放开，做什么、写什么仍只限本子任务\n"
+            f"5. 完成后回填本文件的「当前状态」为已完成、「输出物」为实际产出文件\n"
+            f"6. 同步更新 {task_dir.relative_to(PROJECT_ROOT)}/README.md 子任务总表对应行 + 进展记录\n"
+            f"7. 不要做其他子任务，做完立刻停止并向我报告"
         )
     else:
         body = (
             f"我要执行 {doc_rel} 的 {picked.seq} 子任务（{picked.name}）。\n\n"
             f"请按以下步骤：\n"
-            f"1. 读取这份总控的「任务背景」和子任务总表（不读其他子任务详情）\n"
+            f"1. 读取这份总控的「任务背景」和子任务总表\n"
             f"2. 读取本子任务详情：{picked.seq} - {picked.name}\n"
-            f"3. 读取该子任务「强制阅读」列出的文件\n"
-            f"4. 严格在 {picked.seq} 范围内执行：做完「要做的事情」、产出「输出物」、通过「完成判定」、遵守「不做什么」\n"
-            f"5. 完成后回填总控对应字段：状态改为已完成、输出物填实际产出、追加进展记录一行\n"
-            f"6. 不要做其他子任务，做完立刻停止并向我报告"
+            f"3. 读取该子任务「强制阅读」列出的文件；再主动补读「背景导航」和你自己判断需要的背景（其他子任务详情、相关正式文档、代码现状），把背景挖够再动手\n"
+            f"4. 自主补读必须亲自读（直接读文件/检索），不要为补背景派子 agent 或起深度调查\n"
+            f"5. 严格在 {picked.seq} 范围内执行：做完「要做的事情」、产出「输出物」、通过「完成判定」、遵守「不做什么」——读什么放开，做什么、写什么仍只限 {picked.seq}\n"
+            f"6. 完成后回填总控对应字段：状态改为已完成、输出物填实际产出、追加进展记录一行\n"
+            f"7. 不要做其他子任务，做完立刻停止并向我报告"
         )
     return (
-        "**📋 会话启动提示词（复制下面这段到新会话）**：\n\n"
+        "**📋 会话启动提示词（通用兜底——工作包未内置提示词；正式版应含"
+        "【主体任务】【目标终态】【边界提要】三要素，见 task-control-doc §7）**：\n\n"
         "```\n"
         f"{body}\n"
         "```"
