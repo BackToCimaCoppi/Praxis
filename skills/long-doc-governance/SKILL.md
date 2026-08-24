@@ -13,7 +13,7 @@ description: 长文档治理 skill。当 post-change-check 报 [CRITICAL] 长文
 2. **主动调用**：用户说"帮我拆 XXX"、"这个文档太长了"
 3. **检测报告**：`post-change-check` 输出了 `[CRITICAL]` 行且本轮有实质修改
 
-**不触发**：归档目录（`05-归档/`、`06-05-归档/`）下的文档；`CLAUDE.md` / `AGENTS.md` / `SKILL.md` 不受管控。
+**不触发**：归档目录（默认匹配路径含「归档」的目录，项目可在配置里改）下的文档；`CLAUDE.md` / `AGENTS.md` / `SKILL.md` 不受管控。
 
 ---
 
@@ -43,9 +43,9 @@ description: 长文档治理 skill。当 post-change-check 报 [CRITICAL] 长文
 | 类型 | 覆盖范围 | 警告阈值 | 强制阈值 |
 |---|---|---|---|
 | 接口协议 / 测试 / Schema | `*接口*`、`*数据库*`、`*schema*`、`04-测试/` 等路径模式（由项目自定义） | 600 行 | 1000 行 |
-| 设计文档 / 总控 | `01-需求/`、`02-页面设计/`、`03-技术设计/`、`06-任务总控/`（非归档）、施工蓝图 / goal 章程、任务总控、技术方案 | 800 行 | 1500 行 |
+| 设计文档 / 总控 | `01-需求/`、`02-页面设计/`、`03-技术设计/`、`00-任务总控/`（非归档）、施工蓝图 / goal 章程、任务总控、技术方案 | 800 行 | 1500 行 |
 
-扫描命令：`bash ~/.claude/scripts/doc-length-check.sh --format human --scope <file>`
+扫描命令：`bash <本 skill 目录>/scripts/doc-length-check.sh --format human --scope <file>`（脚本随本 skill 附带，默认阈值在同目录 `doc-length-config.default.json`，项目可用 `.claude/doc-length-config.json` 覆盖）
 
 ---
 

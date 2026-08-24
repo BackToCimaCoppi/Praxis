@@ -42,7 +42,7 @@
 
 2. **流程**（先弹菜单，再按所选分支走）
 
-   - **新建（§A）**：问你一个英文任务名（如 `example-task`）→ 更新 master → 在兄弟目录 `{repo}-{名称}` 建 worktree、拉 `feature/{名称}` 分支 → 列出验证 → 告知完整路径和分支名。
+   - **新建（§A）**：问你一个英文任务名（如 `coupon-center`）→ 更新 master → 在兄弟目录 `{repo}-{名称}` 建 worktree、拉 `feature/{名称}` 分支 → 列出验证 → 告知完整路径和分支名。
    - **合并到 master（§B）**：先提当前 worktree 改动（有则确认 message 后 commit）→ 再提 master 改动 → `merge <当前分支> --no-ff` 进 master → 有冲突就展示冲突文件、协助逐个解决、`git add` 后 commit → 看 `log` 验证。
    - **master 同步到所有 worktree（§C）**：遍历每个 feature worktree → 各自有未提交改动先 `wip` 提交 → `merge master --no-ff` → 某个冲突就**停下**，报出冲突 worktree 路径，等你进去解决后重新触发同步。
    - **清理当前 worktree（§D）**：验证无未提交改动、无未合并 commit → 都干净才 `worktree remove` + `branch -d` → 有未合并 commit 则提示先去 §B 合并；`remove` 报错则停下报告，不强删。
@@ -50,24 +50,24 @@
 3. **最小示例**
 
    ```
-   输入：给示例内容渲染开一条并行开发线
+   输入：给优惠券中心开一条并行开发线
 
    选择：新建 worktree
-   任务名：example-task
+   任务名：coupon-center
 
    产出：
-     新 worktree 路径：<主仓库兄弟目录>/{repo}-example-task
-     分支：feature/example-task（从最新 master 拉出）
+     新 worktree 路径：<主仓库兄弟目录>/{repo}-coupon-center
+     分支：feature/coupon-center（从最新 master 拉出）
    ```
 
    ```
-   输入：示例内容渲染做完了，合回主干
+   输入：优惠券中心做完了，合回主干
 
    选择：合并到 master
      → 当前 worktree 有改动，确认 message 后提交
      → master 干净，跳过
-     → git -C <主仓库> merge feature/example-task --no-ff
-   产出：feature/example-task 已合入 master（保留合并节点）
+     → git -C <主仓库> merge feature/coupon-center --no-ff
+   产出：feature/coupon-center 已合入 master（保留合并节点）
    ```
 
 4. **常见坑**

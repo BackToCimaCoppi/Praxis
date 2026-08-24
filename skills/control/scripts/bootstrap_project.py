@@ -11,7 +11,7 @@
 
 不会建：
 - 任务子目录（用 task-control-doc skill 创建）
-- 06-09 等价的规范文档（方法论真值在 ~/.claude/skills/control/references/总控规范.md）
+- 项目内的规范文档副本（方法论真值在 ~/.claude/skills/control/references/总控规范.md）
 """
 from __future__ import annotations
 

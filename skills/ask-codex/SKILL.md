@@ -249,7 +249,7 @@ codex exec \
 - **后台执行**：codex exec 用 Bash 工具 `run_in_background: true` 发起，不用前台等待（前台 Bash 上限只有 10 分钟，容不下慢速评审）。
 - **scratch 隔离**：`mktemp -d` 派生本轮专属临时目录，防止多任务并发时 prompt/日志互相覆盖；机制与 `adversarial-review` §3.2 相同。
 - **stdin 必须重定向 `< /dev/null`**，否则 codex 检测到 stdin 是管道会永久阻塞。
-- **`-C` 工作目录选择**：涉及项目内容 → 项目根/对应 worktree；与项目无关的独立问题 → `/tmp`。判别标准同 `adversarial-review` §7.2："项目根 CLAUDE.md/AGENTS.md 是工程规约 → 进项目；是人格/身份设定 → 隔离到 /tmp"。
+- **`-C` 工作目录选择**：涉及项目内容 → 项目根/对应 worktree；与项目无关的独立问题 → `/tmp`。判别标准："项目根 CLAUDE.md/AGENTS.md 是工程规约 → 进项目；不是工程规约（与项目无关的对话设定）→ 隔离到 /tmp"。
 - **禁止** `--dangerously-bypass-approvals-and-sandbox`——问模式无理由绕过只读沙箱；派模式的写权限已经由 `-s workspace-write` 显式声明，不需要也不允许全开权限。
 - codex exec 没有 system/user 分离，角色设定合并进 prompt 首部即可。
 

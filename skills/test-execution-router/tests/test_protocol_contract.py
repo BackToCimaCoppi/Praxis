@@ -107,7 +107,7 @@ class ProtocolContractTest(unittest.TestCase):
 
     def test_execution_ref_is_owned_by_goal_bootstrap(self) -> None:
         text = read("test-case-design")
-        self.assertIn("T4/T5 可填预定锚点", text)
+        self.assertIn("规格冻结阶段可填预定锚点", text)
         self.assertIn("goal 的 M0 负责实现为可运行落点", text)
         self.assertNotIn("测试脚本（施工时产出）", text)
 

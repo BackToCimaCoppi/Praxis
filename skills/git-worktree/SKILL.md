@@ -56,7 +56,7 @@ skill 被调用后，**第一步必须**用 `AskUserQuestion` 询问用户选择
 
 ## §A. 新建 worktree
 
-**输入**：向用户询问英文任务名（如 `example-task`、`user-finetune`）
+**输入**：向用户询问英文任务名（如 `coupon-center`、`order-export`）
 
 **命名规则**：
 - 目录名：`{WT_PREFIX}{名称}`（传统布局为 `{REPO_NAME}-{名称}`，容器布局直接 `{名称}`，探测逻辑见「约定探测」）

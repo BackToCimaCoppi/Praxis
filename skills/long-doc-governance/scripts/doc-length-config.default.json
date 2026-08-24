@@ -1,0 +1,22 @@
+{
+  "thresholds": {
+    "api-schema-test": {
+      "warn": 600,
+      "crit": 1000
+    },
+    "design-doc": {
+      "warn": 800,
+      "crit": 1500
+    }
+  },
+  "exclude_globs": [
+    "**/归档/**",
+    "**/*-归档/**",
+    "**/*归档*/**",
+    "**/node_modules/**",
+    "**/.git/**",
+    "**/backups/**",
+    "**/worktrees/**",
+    "**/results/**"
+  ]
+}
