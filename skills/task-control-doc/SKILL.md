@@ -34,10 +34,13 @@ description: Use when the user wants a master control document for a large, comp
 - **鼓励执行会话开工前主动补读**：「背景导航」列出的文件、父级总控、其他子任务详情、相关正式文档、代码现状——把背景挖够再动手。强模型（Fable 5 / GPT-5.6 级）能自主取舍读什么；背景不足导致误判的代价，远大于多读几个文件
 - **视野放开、扇出焊死**：自主补读 = **亲自读**（直接读文件 / 检索），**禁止为"补背景"派子 agent / 起深度调查**（读是加法、派 agent 是乘法；执行会话对背景问题是叶子）。觉得背景缺口大到需要专门调查 → 说明工作包本身没写清，停下向用户报告
 - **执行与写入范围仍严格限于本子任务**——读什么放开 ≠ 做什么放开
+- 每个工作包必须记录 `start_commit`、`allowed_write_paths`、`allowed_cross_task_writes`；交付前对**本子任务明确列出的候选提交**运行 `control/scripts/check_write_scope.py`。无关提交不参与本子任务检查，候选提交夹带越界文件则直接失败
 - 用户在新会话开头自己选模型，**不预定义执行模式**
 - 子任务详情末尾有「会话启动提示词」可直接复制
 
 写总控时按这个原则切分子任务：**强制阅读（核心必读）精准 1-3 个**（超了说明背景没消化成任务），**背景导航不设上限**（一行一条「路径 + 读它获得什么」，宁多勿缺）。
+
+标准研发总控的强制阅读按职责放置，禁止只在背景导航里“提到但不读”：测试用例阶段绑定 `test-standards + test-case-design`；goal 章程阶段绑定 `goal-charter`；goal 执行阶段绑定章程、`test-execution-router` 与项目执行/部署/架构入口；候选终审阶段绑定证据协议、项目证据规则与冻结 L7。具体项目名由研发流程补丁填充。
 
 ---
 
@@ -237,6 +240,16 @@ description: Use when the user wants a master control document for a large, comp
 #### 输入
 （前置依赖的产出物，明确列出）
 
+#### 写入范围（机器检查）
+- `start_commit`: `<开工前当前提交 SHA>`
+- `allowed_write_paths`:
+  - `本工作包路径`
+  - `本子任务输出物路径或目录/**`
+- `allowed_cross_task_writes`:
+  - `父级 README.md::子任务总表`
+  - `父级 README.md::进展记录`
+- 交付检查：`python3 ~/.claude/skills/control/scripts/check_write_scope.py --repo <项目根> --start-commit <SHA> --candidate <本子任务提交SHA> --allow <路径> ... --allow-cross '<路径>::<Markdown标题>' ...`
+
 #### 要做的事情
 - 第一步
 - 第二步
@@ -283,8 +296,9 @@ description: Use when the user wants a master control document for a large, comp
 3. 读取「强制阅读」列出的文件；再主动补读「背景导航」和你自己判断需要的背景（其他子任务详情、相关正式文档、代码现状），把背景挖够再动手
 4. 自主补读必须亲自读（直接读文件/检索），不要为补背景派子 agent 或起深度调查
 5. 严格在 Tn 范围内执行，做完「要做的事情」、产出「输出物」、通过「完成判定」——读什么放开，做什么、写什么仍只限 Tn
-6. 完成后回填总控状态为已完成
-7. **不要做其他子任务**，做完立刻停止并向我报告
+6. 交付前对本子任务候选提交运行写入范围检查器；越界不得交付
+7. 完成后回填总控状态为已完成
+8. **不要做其他子任务**，做完立刻停止并向我报告
 ​```
 ```
 
@@ -311,6 +325,7 @@ description: Use when the user wants a master control document for a large, comp
 ### 8.2 更新规则
 
 - 子任务开始时改 `进行中`，开始前必须**重新读取**该子任务的强制阅读文件
+- goal 首次启动、`--resume`、新会话或自动上下文压缩后，第一次写入前必须再次从磁盘完整读取当前工作包、全部强制阅读、章程、goal 断点与飞行日志尾部；连续未压缩轮次不机械复读整套 skill
 - 子任务完成后改 `已完成`，**立刻停止**，不顺手做下一个
 - 阻塞时改 `阻塞` 并写明原因
 - 产出文件后回填到对应「输出物」
@@ -375,6 +390,7 @@ description: Use when the user wants a master control document for a large, comp
 - [ ] 必备章节全部填充
 - [ ] 全局强制阅读不超过 2 个文件
 - [ ] **每个子任务都是自包含工作包**：强制阅读（核心必读）精准 1-3 个、背景导航按需列出（宁多勿缺）、输出物可检查、完成判定可验
+- [ ] 每个子任务都有结构化写入范围：`start_commit`、`allowed_write_paths`、`allowed_cross_task_writes`；状态回填与唯一跨任务写入均精确到 Markdown 标题
 - [ ] 每个子任务详情末尾有「会话启动提示词」，且开头含三要素（【主体任务】/【目标终态】/【边界提要】，见 §7）——**goal 执行类子任务除外**：该段留占位，由 goal 章程子任务拍板后回填成**一条 `/goal` 条件**（非本套格式，见 §7 末）
 - [ ] 子任务总表**不**含「执行模式」列
 - [ ] 若需 worktree，已按总控规范 §3.3 命令模板创建（路径在主仓库兄弟目录）
@@ -387,7 +403,7 @@ description: Use when the user wants a master control document for a large, comp
 
 ## 12. 标准研发总控流程（可选预设）
 
-绝大多数研发型任务遵循同一条流水线：调查 → 探讨 → 轻量设计 → 测试用例设计 → 真值收敛与规格冻结 → goal 章程 → goal 执行产候选 → 候选终审。第八阶段是对精确候选的独立验收，不是恢复已退役的“交付发布”分段。
+绝大多数研发型任务遵循同一条流水线：调查 → 探讨 → 轻量设计 → 测试用例设计 → 真值收敛与规格冻结 → goal 章程 → goal 执行产候选 → 候选终审。goal 章程同步产出无闸门的启动服务单，提前清算可预见的候选无关用户动作；goal 的第一个里程碑仍固定为 M0 启动检查，在既有授权内准备并修复环境、测试资产、runner、夹具与证据工具。两者都不恢复独立执行准备阶段。
 
 **两种模式，默认标准模式**：用户不声明即套用上面这条八阶段流水线；用户显式声明「自定义」时按其指定编排，本 skill 不强加阶段。**模式与载体（单文件 / 拆分）正交**。
 
@@ -429,9 +445,11 @@ description: Use when the user wants a master control document for a large, comp
 - 依赖引用 ⊆ 编号集合（无孤儿依赖）、无环
 - 子任务文件名 `T{n}-*.md` 前缀与总表编号列完全一致
 - 落的是现行**八**阶段；第八阶段是候选终审，不是施工蓝图 / 文档收尾 / 交付发布类子任务
+- goal 章程与 goal 执行均为显式子任务；goal 执行的 M0 启动检查覆盖全部命中面，可在授权边界内构建或修复测试资产、runner、夹具、环境适配与证据工具，但不得改变冻结 AC 的业务语义
+- goal 章程已产出 `_shared/T{n}-goal启动服务单.md`，完成四分类、`PRE_GOAL` 清算与 `planned_user_windows` 合并复核；服务单无 PASS/FAIL、不扩权、不限制 M0 刷新现场
 - 调查清单只作影响面种子；轻量设计含最终真值切片、完整 `SD-x` 与 `design_index_hash`（哈希规范见 `lightweight-design` §7.2）
 - 正式 L7 是用例唯一全文；T5 产出规格物化覆盖报告，`SD → 正式规格 → AC` 全绿且任务切片内已知债务为零
 - 规格冻结要求 `materialization_pass / semantic_uniqueness_pass / satisfiability_pass / decision_provenance_pass / semantic_diff_pass` 五项全真，且凡触发过评审的对象其封闭式整改验收终态 = PASS（以报告为证据，不设自报布尔）
 - goal 只产出 `CANDIDATE_READY`；候选终审已实例化为**显式子任务**（不可塌缩），依赖精确 commit/tree、执行证据清单与飞行日志；终审 PASS 前 goal 执行子任务保持「进行中」并登记「候选待终审」，缺终审不得将 goal 子任务或总控标完成
 - 每个被评对象同一基线只开放评审一次；回补后由 `{{封闭验收 skill}}` 的原生子线程检查、主线程裁决，`PASS` 才进入下游
-- `{{goal 执行绑定}}` 复合槽位已**逐项**填全（goal 章程方法回读 + 交付/部署 + 测试执行路由 + 项目执行 skill + 环境边界/架构规范 + 检查器命令，检查器命令可落「验证」列）——漏一项 goal 就不知道怎么部署 / 怎么跑测试 / 拿什么判代码合规
+- `{{goal 执行绑定}}` 复合槽位已**逐项**填全（goal 章程方法回读 + M0 启动检查 + 交付/部署 + 测试执行路由 + 项目执行 skill + 环境边界/架构规范 + 检查器命令，检查器命令可落「验证」列）——漏一项 goal 就不知道怎么准备执行面 / 怎么部署 / 怎么跑测试 / 拿什么判代码合规

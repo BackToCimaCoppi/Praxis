@@ -1,6 +1,6 @@
 ---
 name: doc-html-style
-description: 把技术文档/设计文档/业务QA文档/评审报告/复盘等内容写成色彩丰富、桌面阅读优先的自包含单文件HTML成品——不套固定模板，先判断文档形状（读者、篇幅、主信息载体：代码/决策表/问答/时间线）再决定结构与视觉投入档位，用按语义角色分配的色彩（状态轴/类别轴/结论轴）+ token化亮暗主题做到"更丰富但不失控"，而非随意堆砌花色。不是 design-preview 的手机375/750像素舞台还原（那是移动端形态复刻，本skill桌面优先、拒绝手机框约定）；不是 artifact-design 的 Artifact 沙盒规则（本skill产出普通本地/仓库HTML文件，不受CSP限制，无需字体data URI内联）；不是 dataviz 的图表配色规范（文档内嵌真实图表时该图表色彩转交 dataviz，本skill只管文档整体色彩体系）；不是 doc-layer-system 的内容归层决策（写什么内容归哪一层文档归 doc-layer-system，本skill只管已定内容如何呈现成HTML）。**仅手动触发**：只在用户显式输入 `/doc-html-style` 时使用，禁止根据"写文档""html""设计文档"等关键词自动调用，即使正文内容看起来符合适用场景也不要主动触发。
+description: 仅手动触发。把已定内容制作成桌面阅读优先、自包含、支持明暗主题的单文件 HTML 技术文档。只在用户显式输入 /doc-html-style 时使用；移动端像素预览用 design-preview，内容归层用 doc-layer-system。
 ---
 
 # 桌面端富色彩文档 HTML 样式规范

@@ -1,6 +1,6 @@
 ---
 name: ask-codex
-description: Use when the user wants to consult codex (GPT-5.5) for a second opinion, audit, or direct execution — outside the codex-review compliance workflow. 触发词："问一下codex"、"问一下gpt"、"问一下gpt5.5"、"让codex去做"、"让codex直接XX"、"让gpt去做"、"让gpt直接XX"。This skill calls codex via `codex exec`（一次性非交互命令，不是可持续对话的子代理）from the main thread. All synthesis and decisions stay in the main thread. 若问题命中"施工已完成 + 有蓝图/决策表可核对代码是否照图施工"，改用 codex-review，不用本 skill。
+description: 仅手动触发。用户明确要求“问一下 codex/GPT-5.5”或“让 codex 直接执行”时，通过一次性 codex exec 提供第二意见、审查或授权内施工。已完工代码的规格符合性核验改用 codex-review。
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 **设计哲学**：人保留分工权和最终决策权。AI 不做自动路由——用户不说触发词，主线程自己处理。用户说触发词，主线程严格按触发词对应模式执行。
 
-**与「派 Claude 子代理」的根本差异**：用 `Agent` 工具起的 Claude 子代理是可持续对话的进程，派模式能"先探索汇报计划、等确认再动手"。codex 不是子代理，是一条一次性非交互命令行——**跑完即结束，没有"跑到一半停下来等确认"这回事**。因此本 skill 的派模式是**一次性直接执行**（任务+护栏一次性打包，执行完由主线程做事后 `git diff` 验收），不是"探索计划→确认→继续"的两阶段模式。
+**与「派 Claude 子代理」的根本差异**：用 `Agent` 工具起的 Claude 子代理，子代理是可持续对话的进程，派模式能"先探索汇报计划、等确认再动手"。codex 不是子代理，是一条一次性非交互命令行——**跑完即结束，没有"跑到一半停下来等确认"这回事**。因此本 skill 的派模式是**一次性直接执行**（任务+护栏一次性打包，执行完由主线程做事后 `git diff` 验收），不是"探索计划→确认→继续"的两阶段模式。
 
 ---
 

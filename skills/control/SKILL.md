@@ -1,6 +1,6 @@
 ---
 name: control
-description: "Use when the task is to inspect or continue an active master control document under docs/00-任务总控/, such as \"继续总控\", \"执行 T3\", \"查看总控状态\", \"给我一个总控任务表\". This skill selects the target task directory, reads MINIMAL mandatory context for the requested granularity, executes one subtask within strict scope, and writes status updates back. Strictly enforces single-subtask boundaries: executing Tn means doing ONLY Tn, never adjacent subtasks."
+description: "仅手动触发。用户显式调用 /control 查看或推进 docs/00-任务总控/ 下的活跃总控时使用。只执行用户指定的 Tn，回填状态后立即停止，禁止顺带推进相邻子任务。"
 ---
 
 # Control
@@ -25,6 +25,8 @@ description: "Use when the task is to inspect or continue an active master contr
 8. **规则铸造权不在工作包手上**：只有项目级指令文档与 skill 能铸造规则。工作包 / 评审报告 / goal 章程里的「硬门」「死亡线」「必须审批」**一律是执行建议，不具停机权**；**死亡线是封闭清单，任何人无权新增**——包括你（总控规范 §4.4）
 9. **停机白名单封闭，只有三条**：①两份**都已冻结**的真值真矛盾 ②命中项目死亡线清单的**业务规则**要变 ③不可逆 / 外发动作。**其余一律先修后报**——笔误、脚本 bug、过期描述、证据充分的简单缺陷，自己修 + 留痕 + 继续（总控规范 §4.5）。**打断用户的成本远高于一次可回滚的自愈**。goal 执行态例外：章程已预授权的不可逆/外发动作不触发第 ③ 条，停机以章程 §4 白名单为准（总控规范 §4.5）
 10. **总控即提交授权**：建立总控 = 预授权在其范围内 `git commit`，不必每次问；**推送远端仍需显式授权**（总控规范 §4.7）
+11. **写入范围必须机器核对**：开工记录 `start_commit`；工作包列出 `allowed_write_paths` 与精确到 Markdown 标题的 `allowed_cross_task_writes`；交付前只对本子任务明确列出的候选提交运行 `check_write_scope.py`。无关提交不阻断，候选提交夹带越界文件直接失败（总控规范 §4.8）
+12. **长程 goal 必须磁盘复水**：首次启动、`--resume`、新会话或自动上下文压缩后，第一次写入前重读当前工作包、全部强制阅读、章程、goal 断点与飞行日志尾部；连续未压缩轮次不机械复读整套 skill（总控规范 §4.9）
 
 ---
 
@@ -146,6 +148,7 @@ description: "Use when the task is to inspect or continue an active master contr
 | `scripts/next_subtask.py [关键词]` | `/control [关键词]`（含完整会话启动提示词） |
 | `scripts/next_subtask.py [关键词] --show Tn` | `/control [关键词] Tn` —— dump 子任务详情段（支持 `Tn.x`） |
 | `scripts/split_subtask.py <关键词> Tn --subtasks "Tn.1=名1,..." [--apply]` | `/control [关键词] split Tn` —— 拆分（默认 dry-run） |
+| `scripts/check_write_scope.py ...` | 对本子任务候选提交做写入范围与跨任务 Markdown 段检查 |
 | `scripts/list_blocked.py` | `/control blocked` |
 | `scripts/render_control_status.py --list` → 用户选择 → `scripts/set_active.py <精确名>` | `/control switch` |
 | `scripts/set_active.py <关键词>` / `--clear` / `--show` | `/control use ...` |
@@ -191,6 +194,12 @@ python3 $SKILL_DIR/archive_control.py <关键词> --version V1 --apply
 python3 $SKILL_DIR/split_subtask.py <关键词> Tn \
     --subtasks "Tn.1=表设计,Tn.2=接口契约,Tn.3=Migration" \
     --reason "Tn 工作量超出预期" --apply
+
+# 子任务交付前：仅检查明确属于本子任务的候选提交
+python3 $SKILL_DIR/check_write_scope.py --repo . \
+    --start-commit <开工SHA> --candidate <候选SHA> \
+    --allow 'src/目标/**' \
+    --allow-cross 'docs/00-任务总控/.../README.md::子任务总表'
 ```
 
 ---
@@ -231,18 +240,22 @@ python3 $SKILL_DIR/split_subtask.py <关键词> Tn \
 
 **开始前**：
 - 子任务状态改为 `进行中`
+- 读取工作包「写入范围」，在第一次写入前把当前提交记为 `start_commit`；目标路径若较模板发生变化，先修工作包范围再施工，禁止执行后补白名单
 - 重新从磁盘读取该子任务详情和「强制阅读」文件——**不依赖聊天历史**
+- 若为 goal 首次启动、恢复、新会话或自动压缩后的续跑，同时读取章程、`T{n}-goal断点.json` 与飞行日志尾部；先复水再产生任何写入
 - **主动补读背景**：「背景导航」（如有）、其他子任务详情、相关正式文档、代码现状——把背景挖够再动手，不要仅凭工作包内容硬猜
 - 自主补读**亲自读**（直接读文件 / 检索），不为补背景派子 agent / 起深度调查；背景缺口大到需要专门调查 → 停机向用户报告（工作包没写清，见执行边界第 5、6 条）
 - 由用户在新会话开头自行选择模型（不在总控里预定义）
 
 **执行中**：
 - 改动严格限于「要做的事情」描述的范围
+- 每个本子任务提交保持单一职责，不夹带无关文件；仓库中的其他提交/工作树变化不自动归给本任务，也不因其存在停机
 - 遵守「不做什么」字段（如有）
 - 子任务详情有「会话启动提示词」时按它走
 - 遵守项目本地的真值优先级与同步规则（项目自身的 CLAUDE.md / AGENTS.md）
 
 **完成后**：
+- 先提交本子任务变更，再把这些精确候选提交逐个传给 `check_write_scope.py`；越界时回退本子任务内容或补做真实上游范围裁决，禁止事后扩白名单让检查变绿
 - **立刻停止**，不要继续做下一个子任务
 - 回填总控（见下面的「回填」段）
 - 向用户报告完成情况，等下一步指令
