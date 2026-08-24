@@ -5,7 +5,7 @@
 
 ![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
 ![Docs](https://img.shields.io/badge/docs-简体中文-red.svg)
-![Skills](https://img.shields.io/badge/skills-23-green.svg)
+![Skills](https://img.shields.io/badge/skills-25-green.svg)
 
 ---
 
@@ -73,6 +73,9 @@ goal-charter  写执行契约（目标 + 验证器 + 边界 + 自愈清单）→
 配套两道安全阀：[deep-research-gate](docs/deep-research-gate.md) 管住扇出别烧穿配额，
 [codex-review](docs/codex-review.md) 提供事后的低成本符合性核验。
 
+单会话能做完的小任务不必走完整链路——[plan-goal](docs/plan-goal.md) 是它的微缩档：
+一份计划文件包住决策点、AC 表、章程，用户批准一次、验收一次。
+
 ## 安装
 
 把 `skills/` 下你需要的目录拷进 Claude Code 的 skill 目录：
@@ -89,7 +92,7 @@ cp -R skills/adversarial-review ~/.claude/skills/
 > 安装时保持它们在 `~/.claude/skills/` 下平级即可。
 
 **依赖**：多数 skill 仅用 Claude Code 内置能力。需要 [codex CLI](https://github.com/openai/codex) 的有三个：
-`adversarial-review` 的第二评审席（没有 codex 时降级为单侧评审）、`codex-review` 与 `ask-codex`（没有 codex 则不可用）。
+`adversarial-review` 的第二评审席（没有 codex 就无法完成对抗评审——skill 明确禁止单模型冒充双评审）、`codex-review` 与 `ask-codex`（没有 codex 则不可用）。`adversarial-review` 的可选评审者（Grok / GLM / Kimi）另需 Cursor CLI 并登录，不点选就不需要。
 
 ## Skill 总表
 
@@ -119,6 +122,7 @@ cp -R skills/adversarial-review ~/.claude/skills/
 | Skill | 一句话 | 用在什么场景 |
 |-------|--------|------------|
 | [goal-charter](docs/goal-charter.md) | 写自主执行契约（目标+验证器+边界+自愈清单） | 要它一口气跑完，人只在起点拍板、终点验收 |
+| [plan-goal](docs/plan-goal.md) | 轻量任务流程：一份全包计划 → 批准 → goal 跑到底 | 有决策点或测试义务、但单会话能做完的小任务，不想套重流程 |
 | [deep-research-gate](docs/deep-research-gate.md) | 扇出安全门（有界并行放行，深度研究焊死） | 决定"要不要并行派一批子 agent / 开深度研究" |
 
 ### 🧪 测试
@@ -131,7 +135,7 @@ cp -R skills/adversarial-review ~/.claude/skills/
 ### ⚖️ 评审
 | Skill | 一句话 | 用在什么场景 |
 |-------|--------|------------|
-| [adversarial-review](docs/adversarial-review.md) | 双模型独立评审 + 主线程裁决 🐎 三驾马车 | 重要方案/代码定稿前，要一份经得起挑战的评审 |
+| [adversarial-review](docs/adversarial-review.md) | 多模型独立评审 + 主线程裁决与排名 🐎 三驾马车 | 重要方案/代码定稿前，要一份经得起挑战的评审 |
 | [closed-remediation-review](docs/closed-remediation-review.md) | 整改验收（清单冻结，不许扩张） | 评审意见回补完，核验有没有落实、有没有夹带 |
 | [codex-review](docs/codex-review.md) | 单模型低成本符合性核验 | 施工完成后，查实现有没有偏离已冻结的规格 |
 
@@ -140,6 +144,11 @@ cp -R skills/adversarial-review ~/.claude/skills/
 |-------|--------|------------|
 | [design-preview](docs/design-preview.md) | UI 形态还原成像素级 HTML 并弹浏览器 | 聊页面版式时，让人对着真图评审而不是看文字 |
 | [doc-html-style](docs/doc-html-style.md) | 桌面优先、色彩克制而丰富的文档 HTML | 把文档写成给人在电脑上读的 HTML 成品 |
+
+### 🗣 裁决交互
+| Skill | 一句话 | 用在什么场景 |
+|-------|--------|------------|
+| [one-by-one](docs/one-by-one.md) | 逐题裁决模式（禁弹窗、一题一裁一记录） | 要拍板一堆事，弹窗看不清或 AI 的提问听不懂时 |
 
 ### 📨 派活问询
 | Skill | 一句话 | 用在什么场景 |

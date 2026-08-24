@@ -7,6 +7,60 @@
 
 ---
 
+## [2.1.0] — 2026-08-23
+
+这一版把「结果管控」闭环从纸面收紧到可机检：写入范围机器核对、证据链单向不可自证、
+启动检查并入 goal、评审者强制独立勘察。skill 数量 23 → 25，多个 skill 的运行语义有变化，
+升级前请对照下表。
+
+### ⚠️ 行为变化（会改变既有流程的判定结果）
+
+| 变更 | 影响 | 迁移建议 |
+|---|---|---|
+| **`goal-charter` 停机白名单 4 条 → 3 条** | 「凭据找不到」「缺陷修复无唯一低风险答案」「同一失败点连续三次」不再是停机理由，统归 goal 内工程问题 | 章程只保留：两份冻结真值矛盾且影响业务结果 / 死亡线业务规则要变 / 未预授权的不可逆或外发动作；限轮或安全路径穷尽改为交付 `EXECUTION_BLOCKED` 断点 |
+| **章程红队由「每次必打」→「按风险触发或用户点选」** | 普通任务不再自动跑一轮对抗评审 | 命中死亡线、跨域/破坏契约或用户显式要求时才开；`task-control-doc` 标准研发流程 ⑥ 同步 |
+| **`test-execution-router` 失败分类改名/增类** | `TEST_BUG` 改为 `HARNESS_BUG`；新增 `AUTHORITY_REQUIRED`；`SPEC_STALE` 取消「goal 态走回炉」特判，改按语义影响面回用例层或设计层 | 更新项目执行 skill 的分类映射；`MANUAL_REQUIRED` 现在必须附物理边界证明 |
+| **`adversarial-review` 报告结构 8 段 → 10 段** | 新增「评审者调查账与通道信息缺口」「参与模型 + 通道点评与任务内排名」，其余段号顺延 | 存量报告不必改；新评审按新模板出 |
+| **`adversarial-review` 默认评审者 A 由 Opus 5 改为 Fable 5** | 默认阵容 = 原生 Fable 5 + codex GPT-5.6-Sol max；Cursor Grok 4.6 Extra High / GLM 5.2 Max / Kimi K3 Max 为可选评审者，只在用户明确点选时加入；全员禁 Fast | 不需要 Cursor 的用户无影响；要用可选评审者需安装 Cursor CLI 并登录，走 `scripts/cursor-review-runner.sh` |
+| **测试/环境就绪不再是章程准入门票** | 环境、测试资产、runner、夹具、证据工具改由 goal 首个里程碑 **M0 启动检查** 自行建立/修复 | 删除项目里独立的「执行准备」阶段；章程准入只看规格冻结 + 物化覆盖报告全绿 + 真实动作授权 |
+
+### ✨ 新增（2 个 skill）
+
+- `plan-goal` — 轻量任务流程：总控/标准研发流程的微缩档。一份计划文件（九节：终态 / 开场声明 / 事实基线 / 决策点 / 改动 / 测试 AC 表 / 文档同步 / 执行章程 / 执行记录）→ 用户批准 = 决策生效 + 冻结 → 转 goal 跑到底 → 用户终点验收一次。三档分级（直接做 / plan-goal / 升级）与升级触发写死，防止小任务硬套重流程、也防止跳过流程后决策没留痕。
+- `one-by-one` — 逐题裁决模式：仅用户手动触发；禁弹窗，纯文本一题一讲（背景 / 分歧点 / 选项含代价 / 推荐）、一裁一落盘、记完再下一题；假决策三分法（上游决策点不吞、自造题讲不出差异不出、答不出差异即补背景）。
+
+### ✨ 新增机制
+
+**评审**
+
+- `adversarial-review`：可选评审者 C/D/E（Cursor Grok / GLM / Kimi）按用户逐个点选加入，最多五名；评审者 A 需钉死 xhigh 时提供 `claude -p --effort xhigh` 只读 CLI 路线。评审者必须在授权项目根 `REVIEW_ROOT` 内**强制独立只读勘察**并先交调查账（缺勘察重试一次、仍缺判该方失败）；证据包冻结**读取禁区**（本地环境文件、私钥、凭据存储、主线程裁决草稿）与**动作禁区**（执行/联网/MCP/派子 agent），触碰即判失败；通道读不到登记 `INFO-GAP`，不得评成模型漏报；裁决完成后主线程对全部参与模型做**不并列的任务内排名**（先裁决后评分，不反向改裁决）。
+
+**总控三驾马车**
+
+- `task-control-doc` / `control`：工作包新增**写入范围**三字段（`start_commit` / `allowed_write_paths` / `allowed_cross_task_writes`，跨任务写入精确到 Markdown 标题）；交付前用新脚本 `control/scripts/check_write_scope.py` 对候选提交做机器核对，越界即失败，无关并发提交不阻断，禁止事后扩白名单变绿。
+- `control`：长程 goal **磁盘复水**——首次启动 / `--resume` / 新会话 / 上下文压缩后，第一次写入前必须重读工作包、章程、断点文件 `_shared/T{n}-goal断点.json` 与飞行日志尾部；操作性阻塞可交出 `EXECUTION_BLOCKED` 但不取得业务停机权。
+- `task-control-doc`：标准研发流程 ⑥ 新增 **goal 启动服务单**（把可预见的用户动作按 `AI_AUTO / PRE_GOAL / CANDIDATE_DEPENDENT / LONG_LATENCY_EXTERNAL` 提前清算，是现场基线不是准入闸）；⑧ 候选终审改为**全新上下文只读**，缺陷按唯一路由退回，不在终审里顺手修。
+
+**自主执行**
+
+- `goal-charter`：新增 M0 启动检查与**测试基础设施自愈**；执行证据改为 **raw → 采集时不可变信封 → AC 映射 → 账本** 的单向链，`VERIFIED` 必须可重算，禁止账本自证 / 反向改 raw / 事后补绑候选；新增**执行资产交接**（任务临时 / 领域复用 / 项目通用三分类，可复用项晋升并提交）；允许段改为显式继承上游授权（环境 / 动作 / 对象 / 费用含重试储备 / 副作用）且不得扩大。
+- `deep-research-gate`：补齐 `SessionStart` 自检钩子的兜底方案与覆盖边界（只补救下一会话，当前会话内仍靠纪律）。
+
+**测试三件套**
+
+- `test-standards`：手工验证只留给**物理边界**（AI 可控浏览器 / DOM / 截图 + VLM 判读一律算自动化）；测试矩阵固定 **8 个执行面每面一行**，不命中须写可核验 N/A 理由；运行痕迹（退出码 / 报告哈希 / 测试名）不能冒充业务断言证据，新增三条对应阻断条件。
+- `test-case-design`：每条 AC 新增 `result` **证明部件**（证据必须绑定框架原生断言事件 / 真实扫描 / 物理边界原始观测），高风险 AC 须附证明部件覆盖表；金标准硬要求 4 条 → 5 条；新增 `manual_runbook` 字段；冻结后失败按职责路由（产品 / 测试资产 / 用例语义 / 规格）。
+- `test-execution-router`：同一 goal 内拆为 **`bootstrap`**（M0，每面一个健康探针，禁止逐 AC 签 Ready）与 **`verification`** 两种模式；新增 §3.5 单向证据协议（`evidence_semantics_version: assertion-native-v1`、消费者完整性、候选前观测分布报告）；可复用执行资产三类晋升与 `PROPAGATION_REQUIRED` 交接语义。
+
+**其他**
+
+- `doc-layer-system` / `lightweight-design`：分档表与 goal 执行态例外补入「轻量任务流程」档位（对应 `plan-goal` skill，本版尚未收录）。
+- `ask-codex` / `codex-review` / `doc-html-style` / `design-preview`：description 收敛为「仅手动触发」口径，正文不变。
+- 新增随包单元测试：`control/tests/`（写入范围校验、启动提示词复水句）、`task-control-doc/tests/`（八阶段顺序、M0 替代执行准备、终审只读路由）、`test-execution-router/tests/`（跨 skill 措辞契约）。
+- 文档：16 篇 `docs/<skill>.md` 与新正文重新对齐，新增 `docs/plan-goal.md`、`docs/one-by-one.md`；README 修正 `adversarial-review` 的依赖说明（没有 codex 不能降级为单侧评审）。
+
+---
+
 ## [2.0.0] — 2026-07-28
 
 这一版把整个库从「过程管控」重心转向「**结果管控**」：人不再逐道工序把关，而是在
