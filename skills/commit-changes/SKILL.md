@@ -1,35 +1,42 @@
 ---
 name: commit-changes
-description: Use when the user wants to stage changes, create a git commit, or push to the remote repository. Follow the repository's Chinese commit-message convention and review the diff before committing. Run the repository's pre-commit check if present before staging. Never use git add -A or git add .
+description: 仅手动触发。用户明确要求暂存、提交或推送时，先跑项目提交前门禁（若有），审查 diff，逐文件精确 stage 并等用户确认，再按项目提交规范写中文提交信息；禁止 git add -A 和 git add .；未明确要求不推送。触发词："提交"、"commit"、"push"、"推送"、"帮我提交"。
 ---
 
 # Commit Changes
 
-Use this skill when the user asks to commit, push, or "帮我提交".
+用户明确要求提交、推送或说"帮我提交"时使用。本 skill 是用户级通用引擎：只固定流程与红线；提交规范原文、门禁脚本、额外前缀规则由项目注入，本 skill 不硬编码任何项目值。
+
+## 项目注入（挂载点）
+
+| 槽位 | 来源（按顺序探测，先命中先用） | 缺省 |
+|---|---|---|
+| 提交规范原文 | 项目指令文件（`CLAUDE.md` / `AGENTS.md`）的「提交规范」节 → `CONTRIBUTING.md` | 本 skill「Rules」的默认格式 |
+| 提交前门禁命令 | 项目补丁 skill 显式声明的命令 → `.claude/hooks/pre-handoff-check.sh` → `.claude/hooks/pre-commit-check.sh` | 无门禁，跳过 Step 0 |
+| 额外首行规则 | 提交规范里声明的特殊前缀（如跨域提交标记、任务编号） | 无 |
 
 ## Required reads
 
-1. 项目的提交规范文档（如 `CLAUDE.md` / `CONTRIBUTING.md`）
+1. 上表命中的提交规范原文——每次都读，不凭记忆写格式。
 
 ## Rules
 
-- Use Simplified Chinese commit messages
-- Format the message as `<类型>: <简要描述>`
-- Review the diff before committing
-- Do not amend or force-push unless the user explicitly asks
-- Do not commit unrelated work you do not understand
-- Never use `git add -A` or `git add .`
+- 提交信息用简体中文，格式 `<类型>: <简要描述>`；项目提交规范另有规定时以项目为准
+- 提交前必须读 diff
+- 未经用户明确要求，不 amend、不 force-push、不 push
+- 不提交自己不理解、与本次任务无关的改动
+- 永远不用 `git add -A` / `git add .`
 
 ## Default flow
 
-### Step 0 — 门禁（可选；项目有提交前门禁脚本时先跑，不可跳过）
+### Step 0 — 门禁（项目有门禁脚本时必跑，不可跳过）
 
 ```bash
-# 若项目存在提交前门禁脚本（如 .claude/hooks/pre-commit-check.sh）则先运行；没有则跳过本步
-bash .claude/hooks/pre-commit-check.sh
+# 按挂载点顺序探测；命中哪条跑哪条，全部不存在则跳过本步
+bash .claude/hooks/pre-handoff-check.sh
 ```
 
-- exit 1 → 立即停止，告知用户检查失败项，等修复后再触发 skill
+- 退出码非 0 → 立即停止，告知用户失败项，等修复后再触发本 skill
 - `[WARN]` 输出 → 记录警告，在 Report back 中提及，不阻断流程
 
 ### Step 1 — 确认变更文件清单
@@ -58,9 +65,9 @@ git diff --cached
 
 ### Step 4 — 拟写 commit message
 
-格式：`<类型>: <简要描述>`
+默认格式：`<类型>: <简要描述>`，类型限：`修复` / `功能` / `重构` / `规范` / `文档` / `配置`。
 
-类型限：`修复` / `功能` / `重构` / `规范` / `文档` / `配置`
+项目提交规范声明了额外首行规则时优先遵守（例：一次提交改动多个业务域目录时，首行用项目规定的跨域标记并说明原因）。
 
 ### Step 5 — 执行提交
 
