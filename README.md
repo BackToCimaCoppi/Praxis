@@ -116,7 +116,7 @@ cp -R skills/adversarial-review ~/.claude/skills/
 | Skill | 一句话 | 用在什么场景 |
 |-------|--------|------------|
 | [lightweight-design](docs/lightweight-design.md) | 单次局部修改的任务级设计 | 改一个小功能，先把"改什么、怎么改"锁死 |
-| [construction-blueprint](docs/construction-blueprint.md) | 写代码前的施工蓝图 | 动手前先出"逐文件变更图纸"，限制施工范围 |
+| [construction-blueprint](docs/construction-blueprint.md) | 写代码前的施工蓝图（传统人工逐工序流程可选） | 仍由人逐工序把关时，动手前先出"逐文件变更图纸"；结果管控闭环不再产出蓝图 |
 
 ### 🎯 自主执行
 | Skill | 一句话 | 用在什么场景 |

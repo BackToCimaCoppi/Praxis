@@ -55,7 +55,7 @@
 - [ ] 跨 skill 引用为同级相对路径，无绝对路径
 - [ ] 已写 `docs/<名>.md`，四段式齐全
 - [ ] `README.md` 总表已加对应行
-- [ ] 脱敏自查：对全部新增/改动文件跑下面三条，零命中
+- [ ] 脱敏自查：对全部新增/改动文件跑下面四条，零命中
 
   ```bash
   # ① 私有名词（换成你自己/你公司不希望出现的词，含私有业务域词）
@@ -66,6 +66,9 @@
 
   # ③ 本机绝对路径（前置边界，避免 pages/home/ 这类误报）
   grep -rnE '(^|[^A-Za-z0-9])/(Users|home)/[A-Za-z0-9._-]+' skills/ docs/ README.md
+
+  # ④ 家目录写法的私有路径（`~/xxx/…` 会绕过第③条；只放行 skill 安装位置与虚构示例）
+  grep -rnE '~/[A-Za-z][A-Za-z0-9._-]*/' skills/ docs/ README.md | grep -vE '~/\.(claude|agents|codex)/|~/projects/'
   ```
 
   > **为什么第 ② 条不直接字面拦 `token` / `密钥` / `secret`**：这些在技术文档里是高频普通名词——

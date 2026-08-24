@@ -41,8 +41,8 @@ description: 仅手动触发。施工完成后，用 Codex GPT-5.5 对照冻结�
 | 评审什么 | 设计 / 用例 / goal 章程 / 任意方案，或**高风险代码** | 已写完的**代码 diff**（低中风险符合性核验） |
 | 时机 | 开工**前**（真值待定，找最优） | 开工**后**（真值已定，查偏差） |
 | 真值状态 | **待定**——正在探索方案空间 | **已冻结**——规格 + 决策表 + 用例已拍板 |
-| 模型编制 | Opus + GPT 两席对抗 + Opus 裁判 | **GPT-5.5 一席，无对抗** |
-| 收口者 | Opus 裁判（在两份评审间裁） | **分流责任人**（对照冻结真值分流） |
+| 模型编制 | 默认 Fable 5 + GPT-5.6-Sol 双席对抗（可点选更多） | **GPT-5.5 一席，无对抗** |
+| 收口者 | 当前主线程直接裁决（不设裁判） | **分流责任人**（对照冻结真值分流） |
 | 产出 | 采纳/驳回裁决报告 | 三级分类意见（不自动改码） |
 
 **单模型在"符合性核验"这件事上够用，但不要把它当充分代码审查**：
@@ -143,7 +143,7 @@ description: 仅手动触发。施工完成后，用 Codex GPT-5.5 对照冻结�
   - 未验证项单独列为风险（喂给 §4 的"证据类型=实测失败"）
 
 □ 验收条件 / L7 测试义务清单（必填）
-  - lightweight-design §4⑥ 产出的验收条件+观测信号，是评判"测试覆盖"的标准答案
+  - lightweight-design §4.1 六要素画像的 ⑥「怎么验证」产出的验收条件+观测信号，是评判"测试覆盖"的标准答案
   - 拿不到 → "测试覆盖"移出射程内（最多判 B，不可判 A）
 
 □ 工程红线原文（必填）
@@ -336,7 +336,7 @@ A 类改完、B 转可改改完后：
 
 ## 7. 调用命令（codex exec）
 
-复用 `adversarial-review` §7.2 的 codex 机制（`-C` 工作目录、沙箱审批、stdin 重定向、后台读取），**单评审、无并行**，故简化报告中转：
+复用 `adversarial-review` §5.2 的 codex 机制（`-C` 工作目录、沙箱审批、stdin 重定向、后台读取），**单评审、无并行**，故简化报告中转：
 
 ```bash
 # scratch 仍派生（adversarial-review §3.2 同款，作并发安全保险），但单评审可直接 -o 到最终报告路径
@@ -368,7 +368,7 @@ codex exec \
 - `-s read-only`：只读任务，物理上写不了被评审工作区；**禁止** `--dangerously-bypass-approvals-and-sandbox`。
 - 默认 gpt-5.5 xhigh；降级加 `-c 'model_reasoning_effort="medium"'`。
 - 进程退出后再起 Bash `cat "$ABS_REPORT"` 读结果；日志在 `$SCRATCH/codex-log.txt`。
-- **并发例外**：用户确在并发跑多个 codex-review 任务时，回退 adversarial-review §7.2 的 scratch 中转（codex -o 到 `$SCRATCH/codex-out.txt`，再转写 ABS_REPORT），避免同名报告互相覆盖。
+- **并发例外**：用户确在并发跑多个 codex-review 任务时，回退 adversarial-review §3.2 的 scratch 中转（codex -o 到 `$SCRATCH/codex-out.txt`，再转写 ABS_REPORT），避免同名报告互相覆盖。
 
 ---
 

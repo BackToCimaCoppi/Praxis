@@ -88,7 +88,7 @@
 
 **产出**（节选）：
 ```
-~/kb/order-center/
+./kb/order-center/
   README.md            # L1：订单中心概况 + 模块清单 + 残余风险摘要
   discovery-ledger.md  # 枚举来源 + 已知未覆盖（反射RPC盲区）+ 真值源比对状态
   coverage-ledger.md   # t_order[已记录] / order_paid[推测] / closeExpiredOrder[待人工]
@@ -96,7 +96,7 @@
     README.md
     business-logic.md  # 规则：订单超时关闭—触发每5分钟扫【事实|OrderJob:30】…
     database.md  api.md
-~/kb/_platform/call-graph.md   # order-center → inventory（悬空边·被调方未建库）
+./kb/_platform/call-graph.md   # order-center → inventory（悬空边·被调方未建库）
 ```
 
 ### 4. 常见坑
