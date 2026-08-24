@@ -58,6 +58,7 @@
 - `ask-codex` / `codex-review` / `doc-html-style` / `design-preview`：description 收敛为「仅手动触发」口径，正文不变。
 - `commit-changes`：由项目级升格为用户级通用引擎——提交规范原文 / 门禁命令 / 额外首行规则改为「挂载点按序探测」，不再硬编码任何项目值；description 收敛为「仅手动触发」。
 - 新增随包单元测试：`control/tests/`（写入范围校验、启动提示词复水句）、`task-control-doc/tests/`（八阶段顺序、M0 替代执行准备、终审只读路由）、`test-execution-router/tests/`（跨 skill 措辞契约）。
+- `goal-charter`：停机边界再收紧——部署账本显示环境被占用不再停机（触发 goal 即当次环境使用授权，占用信息视为过时登记，登记仍是审计义务）；§6 处置表新增「上游资产完整性错位」自愈行（断链/哈希失配/编号错位按真值优先级修复留痕继续，不停机）。停机白名单在 `control` / `plan-goal` / `test-execution-router` / 流程模板中的复抄改为「决策完整一行提要 + 指针」，真值收敛到 `goal-charter` §4 与 `control` 总控规范 §4.5 两处。
 - `long-doc-governance`：文档长度扫描脚本 `scripts/doc-length-check.sh` 与默认阈值配置随 skill 附带，不再指向仓外路径；项目可用 `.claude/doc-length-config.json` 覆盖。
 - 一致性：`construction-blueprint` 明确为「传统人工逐工序流程可选」，正文中「施工蓝图已退役」的口径统一为「本流程不再产出」；修正 `ask-codex` / `codex-review` / 三张评审口径卡对对抗评审旧编制（Opus 裁判、`§7.2`）的陈旧引用；`docs/lightweight-design.md`、`docs/git-worktree.md` 重新对齐正文；贡献规范自查新增第 ④ 条（家目录写法路径）。
 - 文档：16 篇 `docs/<skill>.md` 与新正文重新对齐，新增 `docs/plan-goal.md`、`docs/one-by-one.md`；README 修正 `adversarial-review` 的依赖说明（没有 codex 不能降级为单侧评审）。
