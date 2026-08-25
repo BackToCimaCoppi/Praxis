@@ -83,7 +83,7 @@ class ProtocolContractTest(unittest.TestCase):
             "AI 可控制浏览器/开发者工具",
             "VLM",
             "物理边界证明",
-            "用户里程碑",
+            "人工里程碑",
         ):
             self.assertIn(required, standards)
         self.assertIn("AI 无法操作", cases)

@@ -44,7 +44,7 @@ Praxis 的 skill（通用引擎，留白挂载点）
 
 整个库的脊梁是这三套，串起来就是 AI 驱动开发的「**规划 → 治理 → 把关**」闭环：
 
-1. **总控** · [task-control-doc](docs/task-control-doc.md) + [control](docs/control.md) —— ⭐ **重点能力**
+1. **总控** · [task-control-doc](docs/task-control-doc.md) + [control](docs/control.md)
    先把跨多次会话的大任务拆成**自包含工作包**（图纸），再让 AI **严格逐格施工**：一次只动一个子任务、做完即停、绝不越界。AI 上下文再满不失忆、范围再大不跑偏。
 2. **七层文档** · [doc-layer-system](docs/doc-layer-system.md) —— 项目招牌
    给代码与文档建立分层治理，让两者永不脱节；死亡线区域强制真人把关。
@@ -55,7 +55,7 @@ Praxis 的 skill（通用引擎，留白挂载点）
 
 ### 想让 AI 一口气把活干完？
 
-如果你的目标不是"逐道工序审"，而是"**交出去、它自己跑到底、我只在起点和终点各出面一次**"，
+如果你的目标不是"逐道工序审"，而是"**交出去、它自己跑到底，只保留起点批准与终点验收**"，
 那就是另一条链路——从规格冻结到自主执行的结果管控闭环：
 
 ```
@@ -63,18 +63,20 @@ lightweight-design  设计决策钉死
         ↓
 test-standards → test-case-design   用例先于施工冻结（断言编号 + 哈希锚）
         ↓
-goal-charter  写执行契约（目标 + 验证器 + 边界 + 自愈清单）→ 红队一次 → 用户拍板
+goal-charter  写执行契约（目标 + 验证器 + 边界 + 自愈清单）→ 按风险评审 → 授权角色批准
         ↓
 自主执行 ──→ test-execution-router  跑测试、收证据、失败分类
         ↓
-候选终审（人只在这里再出现一次）
+候选终审（由项目指定角色负责）
 ```
 
 配套两道安全阀：[deep-research-gate](docs/deep-research-gate.md) 管住扇出别烧穿配额，
 [codex-review](docs/codex-review.md) 提供事后的低成本符合性核验。
 
 单会话能做完的小任务不必走完整链路——[plan-goal](docs/plan-goal.md) 是它的微缩档：
-一份计划文件包住决策点、AC 表、章程，用户批准一次、验收一次。
+一份计划文件包住决策点、AC 表、章程，由业务决策负责人批准、指定候选验收人验收；个人项目可由一人兼任，团队项目可职责分离。
+
+Praxis 不把“当前交互方”默认视为全部权限的持有人。任务发起、业务裁决、共享环境使用、发布授权和候选验收是不同治理角色；共享环境的租约、失效与抢占规则也由项目补丁声明，启动任务本身不构成环境授权。
 
 ## 安装
 
@@ -121,7 +123,7 @@ cp -R skills/adversarial-review ~/.claude/skills/
 ### 🎯 自主执行
 | Skill | 一句话 | 用在什么场景 |
 |-------|--------|------------|
-| [goal-charter](docs/goal-charter.md) | 写自主执行契约（目标+验证器+边界+自愈清单） | 要它一口气跑完，人只在起点拍板、终点验收 |
+| [goal-charter](docs/goal-charter.md) | 写自主执行契约（目标+验证器+边界+自愈清单） | 要它一口气跑完，同时保留角色化批准、环境授权与终点验收 |
 | [plan-goal](docs/plan-goal.md) | 轻量任务流程：一份全包计划 → 批准 → goal 跑到底 | 有决策点或测试义务、但单会话能做完的小任务，不想套重流程 |
 | [deep-research-gate](docs/deep-research-gate.md) | 扇出安全门（有界并行放行，深度研究焊死） | 决定"要不要并行派一批子 agent / 开深度研究" |
 
@@ -158,8 +160,8 @@ cp -R skills/adversarial-review ~/.claude/skills/
 ### 🧭 任务编排
 | Skill | 一句话 | 用在什么场景 |
 |-------|--------|------------|
-| [task-control-doc](docs/task-control-doc.md) | 大任务总控文档方法论 🐎 三驾马车 · ⭐ 重点能力 | 一个跨多次会话的大任务，要先拆成自包含工作包 |
-| [control](docs/control.md) | 总控执行引擎（严格单子任务）🐎 三驾马车 · ⭐ 重点能力 | 照着总控文档逐个子任务推进，做完即停、不越界 |
+| [task-control-doc](docs/task-control-doc.md) | 大任务总控文档方法论 🐎 三驾马车 | 一个跨多次会话的大任务，要先拆成自包含工作包 |
+| [control](docs/control.md) | 总控执行引擎（严格单子任务）🐎 三驾马车 | 照着总控文档逐个子任务推进，做完即停、不越界 |
 
 ### 🔧 Git 流程
 | Skill | 一句话 | 用在什么场景 |

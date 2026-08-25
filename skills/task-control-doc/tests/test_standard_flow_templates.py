@@ -44,7 +44,7 @@ class StandardFlowTemplateTest(unittest.TestCase):
             "全新上下文",
             "产品、测试资产/runner/夹具/环境适配/证据工具 → **同一 goal 执行**",
             "冻结用例语义 / 正式规格 / 业务语义 → **默认热修**",
-            "热修不可靠且用户确认才回退",
+            "热修不可靠且获相应批准才回退",
             "终审只读，不实施整改",
         ):
             self.assertIn(required, text)
