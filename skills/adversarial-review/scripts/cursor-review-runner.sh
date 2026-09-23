@@ -3,6 +3,8 @@
 set -u
 set -o pipefail
 
+export AGENT_CLI_CREDENTIAL_STORE=file
+
 usage() {
   printf '%s\n' \
     'Usage:' \
@@ -98,7 +100,7 @@ if [[ "$action" == 'review' ]]; then
   [[ "$model" =~ ^[A-Za-z0-9._-]+$ ]] || fail 'model ID 含非法字符或为空'
 fi
 
-cursor_bin=$(command -v cursor-agent 2>/dev/null || true)
+cursor_bin=$(command -v cursor-agent 2>/dev/null || command -v agent 2>/dev/null || true)
 [[ -n "$cursor_bin" ]] || fail '找不到 cursor-agent'
 
 write_status() {
@@ -141,70 +143,5 @@ run_and_record() {
   return "$result"
 }
 
-if [[ "${CURSOR_TERMINAL_RELAY_CHILD:-0}" == '1' ]]; then
-  run_and_record
-  exit $?
-fi
-
-probe_output=$($cursor_bin --version 2>&1)
-probe_status=$?
-if [[ $probe_status -eq 0 ]]; then
-  run_and_record
-  exit $?
-fi
-
-if [[ "$(uname -s)" != 'Darwin' || "$probe_output" != *'login keychain is locked'* ]]; then
-  printf '%s\n' "$probe_output" > "$log_file"
-  write_status "$probe_status"
-  exit "$probe_status"
-fi
-
-runner_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)
-runner_path="$runner_dir/$(basename "${BASH_SOURCE[0]}")"
-terminal_args=(
-  env CURSOR_TERMINAL_RELAY_CHILD=1
-  "$runner_path"
-  --action "$action"
-  --output-file "$output_file"
-  --log-file "$log_file"
-  --status-file "$status_file"
-  --timeout "$timeout_seconds"
-)
-
-if [[ "$action" == 'review' ]]; then
-  terminal_args+=(
-    --workspace "$workspace"
-    --prompt-file "$prompt_file"
-    --model "$model"
-  )
-fi
-
-printf -v terminal_command '%q ' "${terminal_args[@]}"
-terminal_command="${terminal_command% }"
-terminal_command="$terminal_command; exit"
-
-if ! osascript - "$terminal_command" <<'APPLESCRIPT' >/dev/null
-on run argv
-  tell application "Terminal"
-    do script (item 1 of argv)
-  end tell
-end run
-APPLESCRIPT
-then
-  printf '%s\n' '无法通过 Terminal 启动 Cursor；请确认 Terminal 可用且已允许自动化。' > "$log_file"
-  write_status 2
-  exit 2
-fi
-
-deadline=$((SECONDS + timeout_seconds))
-while [[ ! -f "$status_file" ]]; do
-  if [[ $SECONDS -ge $deadline ]]; then
-    printf '等待 Terminal 中的 Cursor 超时（%s 秒）。\n' "$timeout_seconds" >> "$log_file"
-    exit 124
-  fi
-  sleep 1
-done
-
-recorded_status=$(tr -d '[:space:]' < "$status_file")
-[[ "$recorded_status" =~ ^[0-9]+$ ]] || fail "状态文件内容非法：$status_file"
-exit "$recorded_status"
+run_and_record
+exit $?
