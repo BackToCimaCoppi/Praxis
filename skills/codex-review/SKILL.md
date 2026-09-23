@@ -41,7 +41,7 @@ description: 仅手动触发。施工完成后，用 Codex GPT-5.5 对照冻结�
 | 评审什么 | 设计 / 用例 / goal 章程 / 任意方案，或**高风险代码** | 已写完的**代码 diff**（低中风险符合性核验） |
 | 时机 | 开工**前**（真值待定，找最优） | 开工**后**（真值已定，查偏差） |
 | 真值状态 | **待定**——正在探索方案空间 | **已冻结**——规格 + 决策表 + 用例已拍板 |
-| 模型编制 | 默认 Fable 5 + GPT-5.6-Sol 双席对抗（可点选更多） | **GPT-5.5 一席，无对抗** |
+| 模型编制 | 触发时按用户本机可用桥接/模型选择至少一席 | **Codex 单席，无多模型对比** |
 | 收口者 | 当前主线程直接裁决（不设裁判） | **分流责任人**（对照冻结真值分流） |
 | 产出 | 采纳/驳回裁决报告 | 三级分类意见（不自动改码） |
 
@@ -147,7 +147,7 @@ description: 仅手动触发。施工完成后，用 Codex GPT-5.5 对照冻结�
   - 拿不到 → "测试覆盖"移出射程内（最多判 B，不可判 A）
 
 □ 工程红线原文（必填）
-  - 从 CLAUDE.md 摘出适用条款，内嵌原文（不写"参考 CLAUDE.md"）+ 项目补丁的红线机检命令
+  - 从 AGENTS.md 摘出适用条款，内嵌原文（不写"参考 AGENTS.md"）+ 项目补丁的红线机检命令
 
 □ 真值指针（如有）：规格已引用的契约层/持久化层文档摘要
 
@@ -343,7 +343,7 @@ A 类改完、B 转可改改完后：
 SCRATCH='<本轮派生的 SCRATCH 字面值>'
 ABS_REPORT='<§3.2 推导的最终报告路径>'
 
-# 评审代码 → -C 指向被评审项目根（让 codex 可补读周边、读到 AGENTS.md/CLAUDE.md 工程规约）
+# 评审代码 → -C 指向被评审项目根（让 codex 可补读周边、读到 AGENTS.md 工程规约）
 CODEX_CWD="$(git rev-parse --show-toplevel 2>/dev/null || echo /tmp)"
 
 cat > "$SCRATCH/codex-prompt.txt" << 'PROMPT_EOF'
@@ -364,7 +364,7 @@ codex exec \
   > "$SCRATCH/codex-log.txt" 2>&1
 ```
 
-- 用 Bash 工具 `run_in_background: true` 发起（评审可能超 10 分钟，前台 Bash 上限 10 分钟容不下）。
+- 用当前运行时的后台命令或长会话机制发起，并记录进程状态。
 - `-s read-only`：只读任务，物理上写不了被评审工作区；**禁止** `--dangerously-bypass-approvals-and-sandbox`。
 - 默认 gpt-5.5 xhigh；降级加 `-c 'model_reasoning_effort="medium"'`。
 - 进程退出后再起 Bash `cat "$ABS_REPORT"` 读结果；日志在 `$SCRATCH/codex-log.txt`。

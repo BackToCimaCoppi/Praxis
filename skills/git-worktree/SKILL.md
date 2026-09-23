@@ -6,7 +6,7 @@ allowed-tools: Bash, Read
 
 # git-worktree
 
-多 worktree 并行开发管理工具。主仓库当前 checkout 的分支即**主干分支**，是唯一主干，所有 worktree 的改动最终合并回主干。worktree 与任何总控/任务体系**解绑**——同一 worktree 可承载多个任务，若项目启用了 `control` skill，通过 `/control switch` 切换。
+多 worktree 并行开发管理工具。主仓库当前 checkout 的分支即**主干分支**，是唯一主干，所有 worktree 的改动最终合并回主干。worktree 与任何总控/任务体系**解绑**——同一 worktree 可承载多个任务，若项目启用了 `control` skill，通过 `$control switch` 切换。
 
 ## 约定探测（所有操作的公共前置）
 
@@ -40,7 +40,7 @@ fi
 
 ## 触发入口（强制）
 
-skill 被调用后，**第一步必须**用 `AskUserQuestion` 询问用户选择操作：
+skill 被调用后，**第一步必须**用当前运行时支持的对话内菜单询问用户选择操作；无菜单工具时用纯文本列出选项：
 
 问题：**你想执行哪个 worktree 操作？**
 
@@ -196,7 +196,7 @@ git -C "$MAIN_ROOT" worktree list
 
 ## 不在范围内
 
-- 项目自身的任务/总控体系切换（若项目启用了 `control` skill，用 `/control switch` 处理，与 worktree 无关）
+- 项目自身的任务/总控体系切换（若项目启用了 `control` skill，用 `$control switch` 处理，与 worktree 无关）
 - rebase（统一用 merge，保留完整历史）
 - push 到远端（由用户手动决定）
 - stash 或中间分支

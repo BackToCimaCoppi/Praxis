@@ -64,7 +64,7 @@ Phase 5: 新鲜视角自检
 ### 扫描步骤
 
 1. 读项目根目录（`ls`、`find . -maxdepth 3 -type f -name "*.java|*.go|*.ts|*.py" | head -50`）
-2. 读 README/CLAUDE.md（若有）
+2. 读 README/AGENTS.md（若有）
 3. 统计文件规模：`find . -name "*.java" | wc -l`（按语言调整后缀）
 4. 识别模块边界：Maven 多模块 → 看 pom.xml；Go → 看目录名；JS/TS → 看 package.json/目录结构
 
@@ -81,7 +81,7 @@ Phase 5: 新鲜视角自检
 
 ### 语言约定
 
-优先读项目 CLAUDE.md，默认跟随用户对话语言（通常中文）。
+优先读项目 AGENTS.md，默认跟随用户对话语言（通常中文）。
 
 ---
 

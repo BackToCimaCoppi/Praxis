@@ -255,7 +255,7 @@ AI 在冲突分级（§2）时，若能推断出「文档上次合并时间早�
 ### 3.2 钩子实现三层联动
 
 1. **AI 主动扫描层**：AI 在执行任务时，按 §3.1 矩阵主动扫描；发现不一致 → 人工裁决
-2. **脚本检查层**：项目可选地实现 `post-change-check` 脚本，文件改动后自动跑（示例（MyApp）：`.claude/hooks/post-change-check.sh`）
+2. **脚本检查层**：项目可选地实现 `post-change-check` 脚本，文件改动后自动跑（示例（MyApp）：`.agents/hooks/post-change-check.sh`）
 3. **评审拦截层**：评审工作流中作为强制检查项（项目可自定义触发器与命名，如 /review）
 
 ### 3.3 冻结前跨层可实现性检查（强制）
@@ -952,7 +952,7 @@ Q: 有相关测试用例需要更新吗？
 | 探查现有数据库结构 | 提供 L4 真值验证依据 | 项目级数据库探查 skill |
 | 大型跨会话任务 | 在任务总控中标注各子任务涉及哪些层 | 任务总控 skill |
 | 代码审查 | 补充七层一致性检查 | `/review` 工作流 |
-| 中等任务管理 | 任务级设计文档标注本轮变更涉及哪些层 | `lightweight-design`；仍按人逐工序把关的流程可继续用 `construction-blueprint` 出施工图纸 |
+| 中等任务管理 | 任务级设计文档标注本轮变更涉及哪些层 | `lightweight-design`；影响面与验收映射留在设计层，施工切片留在 goal 章程 |
 | 编写测试用例 | 提供 L7 用例规格、白盒/黑盒设计与冻结规则 | `test-standards` + `test-case-design`；执行见 `test-execution-router` + 项目执行 skill |
 | 设计/用例/章程的开放式评审 | 提供真值基线、`DEC-x` 裁决留痕规则与「已决策·不得重开」依据 | `adversarial-review`（单轮开放，主线程裁决） |
 | 评审整改的封闭验收 | 冻结前的评审闭环证据（报告终态 = PASS）以其产出为准 | `closed-remediation-review` |

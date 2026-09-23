@@ -2,7 +2,7 @@
 """
 归档总控任务：自动同步 3 处索引并迁移目录到 归档/V{x}/。
 
-按 `~/.claude/skills/control/references/总控规范.md` §5 索引同步表执行：
+按 `~/.agents/skills/control/references/总控规范.md` §5 索引同步表执行：
 1. 顶层 docs/00-任务总控/README.md 删除活跃任务行
 2. 迁移目录到 docs/00-任务总控/归档/V{x}/{任务目录名}/
 3. docs/00-任务总控/归档/README.md 增加该任务的归档登记

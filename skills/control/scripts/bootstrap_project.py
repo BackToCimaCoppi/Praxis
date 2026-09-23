@@ -5,13 +5,13 @@
 会建：
 - docs/00-任务总控/README.md（活跃任务索引模板）
 - docs/00-任务总控/归档/README.md（归档总索引模板）
-- .gitignore 中追加 .claude/local/（若未包含）
+- .gitignore 中追加 .agents/local/（若未包含）
 
 不会覆盖已存在的文件。重复运行无副作用。
 
 不会建：
 - 任务子目录（用 task-control-doc skill 创建）
-- 项目内的规范文档副本（方法论真值在 ~/.claude/skills/control/references/总控规范.md）
+- 项目内的规范文档副本（方法论真值在 ~/.agents/skills/control/references/总控规范.md）
 """
 from __future__ import annotations
 
@@ -43,8 +43,8 @@ ACTIVE_README_TEMPLATE = """# 当前项目任务总控
 ## 操作指南
 
 - 创建新总控：`task-control-doc` skill
-- 进入活跃总控：`/control <关键词>`
-- 列所有活跃：`/control list`
+- 进入活跃总控：`$control <关键词>`
+- 列所有活跃：`$control list`
 - 归档完成的总控：通过 `archive_control.py --apply`
 """
 
@@ -62,12 +62,10 @@ ARCHIVE_README_TEMPLATE = """# 归档总索引
 """
 
 
-GITIGNORE_CANONICAL = ".claude/local/"
+GITIGNORE_CANONICAL = ".agents/local/"
 GITIGNORE_VARIANTS = {
-    ".claude/local/",
-    ".claude/local",
-    "/.claude/local/",
-    "/.claude/local",
+    ".agents/local/",
+    "/.agents/local/",
 }
 
 
@@ -81,7 +79,7 @@ def write_if_absent(path: Path, content: str) -> str:
 
 
 def ensure_gitignore_entry() -> str:
-    """确保 .gitignore 包含 .claude/local/，返回 'created' / 'added' / 'present'。"""
+    """确保 .gitignore 包含 .agents/local/，返回 'created' / 'added' / 'present'。"""
     if not GITIGNORE.exists():
         GITIGNORE.write_text(GITIGNORE_CANONICAL + "\n", encoding="utf-8")
         return "created"
@@ -106,7 +104,7 @@ def main() -> int:
     p = ARCHIVE_ROOT / "README.md"
     actions.append((str(p.relative_to(PROJECT_ROOT)), write_if_absent(p, ARCHIVE_README_TEMPLATE)))
 
-    actions.append((".gitignore（含 .claude/local/）", ensure_gitignore_entry()))
+    actions.append((".gitignore（含 .agents/local/）", ensure_gitignore_entry()))
 
     label_map = {
         "created": "✓ 新建",

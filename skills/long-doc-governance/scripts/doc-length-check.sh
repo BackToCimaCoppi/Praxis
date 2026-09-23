@@ -7,8 +7,8 @@ set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEFAULT_CONFIG="$SCRIPT_DIR/doc-length-config.default.json"
-PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(pwd)}"
-PROJECT_CONFIG="$PROJECT_DIR/.claude/doc-length-config.json"
+PROJECT_DIR="${PRAXIS_PROJECT_ROOT:-$(pwd)}"
+PROJECT_CONFIG="$PROJECT_DIR/.agents/doc-length-config.json"
 
 FORMAT="human"
 CUSTOM_CONFIG=""
@@ -59,7 +59,7 @@ scope_all = sys.argv[4] == "true"
 scope_files = [f for f in sys.argv[5:] if f]
 
 # Determine project root
-project_dir = os.environ.get("CLAUDE_PROJECT_DIR", "")
+project_dir = os.environ.get("PRAXIS_PROJECT_ROOT", "")
 if not project_dir:
     try:
         r = subprocess.run(["git", "rev-parse", "--show-toplevel"],
@@ -95,7 +95,7 @@ def classify(filepath):
     basename = parts[-1] if parts else ""
 
     # Skip agent rules
-    if basename in ("CLAUDE.md", "AGENTS.md"):
+    if basename in ("AGENTS.md",):
         return "skip"
     if basename == "SKILL.md" and "skills" in parts:
         return "skip"
@@ -127,7 +127,7 @@ def classify(filepath):
         "05-前端技术" in parts or
         "06-后端技术" in parts or
         ("00-任务总控" in parts and "归档" not in parts) or
-        any(kw in basename for kw in ["施工蓝图", "任务总控", "技术方案"])
+        any(kw in basename for kw in ["任务总控", "技术方案"])
     )
     if is_design:
         return "design-doc"

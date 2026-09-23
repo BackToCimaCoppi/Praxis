@@ -1,6 +1,6 @@
 # {任务名} - 总控
 
-> **真值源**：`~/.claude/skills/control/references/总控规范.md`
+> **真值源**：`~/.agents/skills/control/references/总控规范.md`
 > 本任务采用**拆分模式**：每个子任务在独立的 `Tn-{子任务名}.md` 文件中维护。
 > 模型选择由用户在新会话开头自行决定（用 `/model`）。
 >
@@ -66,7 +66,7 @@
 
 ## 11. 更新规则
 
-详见 `~/.claude/skills/control/references/总控规范.md` §2。简要：
+详见 `~/.agents/skills/control/references/总控规范.md` §2。简要：
 
 - 子任务状态变化时，同步更新本文件「子任务总表」对应行
 - 子任务完成 → 立刻停止，不顺手做下一个

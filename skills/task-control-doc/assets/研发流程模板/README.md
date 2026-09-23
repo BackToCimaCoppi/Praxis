@@ -1,7 +1,7 @@
 # {任务名} - 总控（研发流程预设）
 
-> **真值源**：`~/.claude/skills/control/references/总控规范.md`
-> **流程预设真值**：`~/.claude/skills/task-control-doc/references/标准研发流程.md`（八阶段菜单 + 拆分决策表 + DAG 连法）
+> **真值源**：`~/.agents/skills/control/references/总控规范.md`
+> **流程预设真值**：`~/.agents/skills/task-control-doc/references/标准研发流程.md`（八阶段菜单 + 拆分决策表 + DAG 连法）
 > 本任务套用**标准研发流程预设**。载体（单文件 / 拆分）按实例化后子任务数自动选：≤7 个且各详情 <50 行用单文件，否则拆分（本模板按拆分载体给出；单文件载体把子任务详情并回本文件）。
 > 模型选择由用户在新会话开头自行决定（用 `/model`）。
 > 总体状态由 `render_control_status.py` 从子任务总表派生，不在此处手填。
@@ -71,7 +71,7 @@
 
 ## 11. 更新规则
 
-详见 `~/.claude/skills/control/references/总控规范.md` §2。简要：
+详见 `~/.agents/skills/control/references/总控规范.md` §2。简要：
 
 - 子任务状态变化时，同步更新本文件「子任务总表」对应行
 - 子任务完成 → 立刻停止，不顺手做下一个

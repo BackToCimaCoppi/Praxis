@@ -7,7 +7,7 @@ description: Use when the user wants a master control document for a large, comp
 
 当用户要求"为某件事做总控文档"时，使用本 skill。
 
-**真值源**：`~/.claude/skills/control/references/总控规范.md`。本 skill 只描述**如何创建**总控；生命周期、归档定义、目录结构都在那里。
+**真值源**：`~/.agents/skills/control/references/总控规范.md`。本 skill 只描述**如何创建**总控；生命周期、归档定义、目录结构都在那里。
 
 **方法论补充**：`references/方法论.md`（为什么要做、何时做、常见风险）。
 
@@ -31,7 +31,7 @@ description: Use when the user wants a master control document for a large, comp
 每个子任务都应该是一个**自包含的工作包**：
 
 - 新会话读「子任务详情 + 强制阅读文件」即可开工——这是**准入下限，不是视野上限**
-- **鼓励执行会话开工前主动补读**：「背景导航」列出的文件、父级总控、其他子任务详情、相关正式文档、代码现状——把背景挖够再动手。强模型（Fable 5 / GPT-5.6 级）能自主取舍读什么；背景不足导致误判的代价，远大于多读几个文件
+- **鼓励执行会话开工前主动补读**：「背景导航」列出的文件、父级总控、其他子任务详情、相关正式文档、代码现状——把背景挖够再动手。具备充分上下文处理能力的模型能自主取舍读什么；背景不足导致误判的代价，远大于多读几个文件
 - **视野放开、扇出焊死**：自主补读 = **亲自读**（直接读文件 / 检索），**禁止为"补背景"派子 agent / 起深度调查**（读是加法、派 agent 是乘法；执行会话对背景问题是叶子）。觉得背景缺口大到需要专门调查 → 说明工作包本身没写清，停下向用户报告
 - **执行与写入范围仍严格限于本子任务**——读什么放开 ≠ 做什么放开
 - 每个工作包必须记录 `start_commit`、`allowed_write_paths`、`allowed_cross_task_writes`；交付前对**本子任务明确列出的候选提交**运行 `control/scripts/check_write_scope.py`。无关提交不参与本子任务检查，候选提交夹带越界文件则直接失败
@@ -103,7 +103,7 @@ description: Use when the user wants a master control document for a large, comp
 3. 出现第一个资产时即建 `_shared/`，即使只有 1 个文件
 4. 所有资产路径**必须**列在对应子任务详情的「输出物」字段——「输出物」是真值源，不再单独维护「资产清单」
 
-详见 `~/.claude/skills/control/references/总控规范.md` §1.1.1。
+详见 `~/.agents/skills/control/references/总控规范.md` §1.1.1。
 
 模板见：
 - 单文件：`assets/任务总控模板.md`
@@ -181,7 +181,7 @@ description: Use when the user wants a master control document for a large, comp
 
 状态枚举：`待完成` / `进行中` / `已完成` / `阻塞` / `已取消`
 
-> **创建阶段不写二级**：初始化总控时**只列一级 T1/T2/T3...**。需要拆分时由用户在执行过程中触发 `/control <key> split Tn`（详见下方 §6.1），不在创建阶段就预先拆好二级。这是因为大多数任务在动手前根本不知道哪一级会真的太大。
+> **创建阶段不写二级**：初始化总控时**只列一级 T1/T2/T3...**。需要拆分时由用户在执行过程中触发 `$control <key> split Tn`（详见下方 §6.1），不在创建阶段就预先拆好二级。这是因为大多数任务在动手前根本不知道哪一级会真的太大。
 
 > **⚠️ 列名为脚本硬依赖，不可自定义**：`render_control_status.py` 和 `next_subtask.py` 依赖固定列名匹配，**不得重命名或替换**以下四列：
 > - `编号`（或 `序号`）
@@ -195,7 +195,7 @@ description: Use when the user wants a master control document for a large, comp
 
 ### 6.1 中途拆分（一级 → 二级）
 
-任务执行过程中，发现某个一级父任务 Tn 工作量超出预期、单一会话做不完 → 用户触发 `/control <key> split Tn` 把它原地拆为 Tn.1 ~ Tn.N。
+任务执行过程中，发现某个一级父任务 Tn 工作量超出预期、单一会话做不完 → 用户触发 `$control <key> split Tn` 把它原地拆为 Tn.1 ~ Tn.N。
 
 **只允许两级**：Tn.x 不可再拆。深层就该开新总控、或重新设计任务边界。
 
@@ -212,8 +212,8 @@ description: Use when the user wants a master control document for a large, comp
 
 - 父任务状态列固定写 `派生`（脚本会自动从子任务聚合实际状态）
 - 二级编号必须形如 `T{父}.{m}`，m 从 1 起递增
-- `/control <key> split Tn` 由用户显式触发；AI 不可自行决定拆分粒度
-- 详细规范见 `~/.claude/skills/control/references/总控规范.md` §1.2.1
+- `$control <key> split Tn` 由用户显式触发；AI 不可自行决定拆分粒度
+- 详细规范见 `~/.agents/skills/control/references/总控规范.md` §1.2.1
 - 执行流程见 control skill §5.5
 
 ---
@@ -248,7 +248,7 @@ description: Use when the user wants a master control document for a large, comp
 - `allowed_cross_task_writes`:
   - `父级 README.md::子任务总表`
   - `父级 README.md::进展记录`
-- 交付检查：`python3 ~/.claude/skills/control/scripts/check_write_scope.py --repo <项目根> --start-commit <SHA> --candidate <本子任务提交SHA> --allow <路径> ... --allow-cross '<路径>::<Markdown标题>' ...`
+- 交付检查：`python3 ~/.agents/skills/control/scripts/check_write_scope.py --repo <项目根> --start-commit <SHA> --candidate <本子任务提交SHA> --allow <路径> ... --allow-cross '<路径>::<Markdown标题>' ...`
 
 #### 要做的事情
 - 第一步
@@ -304,11 +304,11 @@ description: Use when the user wants a master control document for a large, comp
 
 ---
 
-**会话启动提示词三要素（硬要求）**：提示词开头、步骤清单之前必须有三段——①【主体任务】一句话说明本子任务做什么、产出什么；②【目标终态】完成判定的可度量压缩提要；③【边界提要】「不做什么」关键禁令压缩转述 + 显式声明「详细以工作包对应段为准」。三段全部是**压缩转述 + 指针**：验证命令、哈希值、豁免细节等易变真值只留在工作包 / 章程里，禁止复制进提示词——两处真值必漂移。goal 执行类子任务的【目标终态】须含各退出线的一行版提要。（对齐 Claude Code /goal 官方三要素——可度量终态 / 明确验证方式 / 关键约束。指针架构不变：提示词只做压缩提要，全量真值仍在工作包 / 章程）
+**会话启动提示词三要素（硬要求）**：提示词开头、步骤清单之前必须有三段——①【主体任务】一句话说明本子任务做什么、产出什么；②【目标终态】完成判定的可度量压缩提要；③【边界提要】「不做什么」关键禁令压缩转述 + 显式声明「详细以工作包对应段为准」。三段全部是**压缩转述 + 指针**：验证命令、哈希值、豁免细节等易变真值只留在工作包 / 章程里，禁止复制进提示词——两处真值必漂移。goal 执行类子任务的【目标终态】须含各退出线的一行版提要。（执行目标必须可度量，并有明确验证方式与关键约束；全量真值仍在工作包 / 章程）
 
 **唯一例外——goal 执行类子任务建总控时不写提示词，留占位**：它的三要素原料（章程 §1 终态 / §3.2 禁令 / §4 白名单）全部来自终版章程，而章程要到 goal 章程子任务才产出、还要经风险整改与对应授权角色批准。建总控时写它只能猜，且评审整改可能改 §1/§3.2，写了必漂移。故该段由 **goal 章程子任务在获批之后回填**——这是全流程唯一被授权的跨子任务写入，**只准写那一段**。占位对下方 §13 落盘自检的「无残留 `{{}}`」不计违规。
 
-且该段回填的**不是**本节这套「三要素 + 步骤清单」格式，而是**一条 `/goal` 完成条件**（四段式，写法与逐段取料表见 `goal-charter` §13.3～§13.5）：`/goal` 的条件本身就是首轮指令，官方设计里不需要另发提示词，拆成"提示词 + 条件"两块 = 双份真值必漂移。三要素不丢，承载在条件内——主体任务→开工指令段、目标终态→完成条件段、边界提要→约束段。
+且该段回填的**不是**本节这套「三要素 + 步骤清单」格式，而是**一条自主执行启动指令**（四段式，写法与逐段取料表见 `goal-charter` §13.3～§13.5）：启动指令指向唯一章程，不另发一份会漂移的提示词，拆成"提示词 + 条件"两块 = 双份真值必漂移。三要素不丢，承载在条件内——主体任务→开工指令段、目标终态→完成条件段、边界提要→约束段。
 
 ---
 
@@ -325,7 +325,7 @@ description: Use when the user wants a master control document for a large, comp
 ### 8.2 更新规则
 
 - 子任务开始时改 `进行中`，开始前必须**重新读取**该子任务的强制阅读文件
-- goal 首次启动、`--resume`、新会话或自动上下文压缩后，第一次写入前必须再次从磁盘完整读取当前工作包、全部强制阅读、章程、goal 断点与飞行日志尾部；连续未压缩轮次不机械复读整套 skill
+- goal 首次启动、`恢复运行`、新会话或自动上下文压缩后，第一次写入前必须再次从磁盘完整读取当前工作包、全部强制阅读、章程、goal 断点与飞行日志尾部；连续未压缩轮次不机械复读整套 skill
 - 子任务完成后改 `已完成`，**立刻停止**，不顺手做下一个
 - 阻塞时改 `阻塞` 并写明原因
 - 产出文件后回填到对应「输出物」
@@ -383,7 +383,7 @@ description: Use when the user wants a master control document for a large, comp
 新建总控前自检：
 
 - [ ] 任务大小确实达到"总控级"，不是 `lightweight-design` 能解决的
-- [ ] 项目已 bootstrap（`<PROJECT_ROOT>/docs/00-任务总控/README.md` 存在），未初始化先跑 `~/.claude/skills/control/scripts/bootstrap_project.py`
+- [ ] 项目已 bootstrap（`<PROJECT_ROOT>/docs/00-任务总控/README.md` 存在），未初始化先跑 `~/.agents/skills/control/scripts/bootstrap_project.py`
 - [ ] 任务目录命名符合规范：`{YYYY-MM-DD}-{中文任务名}/`，日期为创建日
 - [ ] 选择了合适的**载体**（单文件 / 拆分）——注意「载体」与「模式（标准 / 自定义）」是两个正交维度，别混为一谈
 - [ ] 主总控文档名为 `README.md`（不是任务名+任务总控.md）
@@ -391,7 +391,7 @@ description: Use when the user wants a master control document for a large, comp
 - [ ] 全局强制阅读不超过 2 个文件
 - [ ] **每个子任务都是自包含工作包**：强制阅读（核心必读）精准 1-3 个、背景导航按需列出（宁多勿缺）、输出物可检查、完成判定可验
 - [ ] 每个子任务都有结构化写入范围：`start_commit`、`allowed_write_paths`、`allowed_cross_task_writes`；状态回填与唯一跨任务写入均精确到 Markdown 标题
-- [ ] 每个子任务详情末尾有「会话启动提示词」，且开头含三要素（【主体任务】/【目标终态】/【边界提要】，见 §7）——**goal 执行类子任务除外**：该段留占位，由 goal 章程子任务拍板后回填成**一条 `/goal` 条件**（非本套格式，见 §7 末）
+- [ ] 每个子任务详情末尾有「会话启动提示词」，且开头含三要素（【主体任务】/【目标终态】/【边界提要】，见 §7）——**goal 执行类子任务除外**：该段留占位，由 goal 章程子任务拍板后回填成**一条自主执行启动指令**（非本套格式，见 §7 末）
 - [ ] 子任务总表**不**含「执行模式」列
 - [ ] 若需 worktree，已按总控规范 §3.3 命令模板创建（路径在主仓库兄弟目录）
 - [ ] 已在顶层 `docs/00-任务总控/README.md` 「当前活跃任务」表追加该任务行
@@ -409,7 +409,7 @@ description: Use when the user wants a master control document for a large, comp
 
 - **真值源**：`references/标准研发流程.md`（八阶段菜单、拆分决策表、评审风险触发、DAG 连法、槽位发现协议）。
 - **触发**：用户说"按标准研发流程建总控" / "研发流程总控" / "标准研发流程"，或任务明显是研发流水线。
-- **定位**：正交预设（见 §10），**不新增 `/control` 命令**。
+- **定位**：正交预设（见 §10），**不新增 `$control` 命令**。
 - **项目绑定**：八阶段是抽象的；具体"每阶段读什么 / 产出落哪 / 怎么验证 / 哪是死亡线"由**项目研发流程补丁**填充（发现协议见 `标准研发流程.md` §6.1）。
 
 ## 13. 研发流程实例化交互流程

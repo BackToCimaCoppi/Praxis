@@ -1,13 +1,20 @@
 # 变更日志
 
 本文件记录 Praxis 的重要变更，尤其是**破坏性变更**——如果你已经把 skill 拷进
-`~/.claude/skills/`，升级前请先读一遍本文件。
+任一技能安装目录，升级前请先读一遍本文件。
 
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)。
 
 ---
 
 ## [Unreleased]
+
+### 2026-09-23 · 通用 Agent Skills 迁移
+
+- 根入口改为 `AGENTS.md`，安装路径改为 `.agents/skills/`；旧 Claude 专有入口不再维护。升级时迁移安装目录和项目级补丁。
+- 退役 `construction-blueprint`；新增 `site-preview` 手机审阅目录及按配置授权的可选私有发布。
+- 对抗评审改为触发时探测 Claude Code、Cursor Agent、Codex；用户从本机模型中选至少一个非 Fast 模型。单模型报告不做虚假排名。
+- 标准流程采用项目研发流程适配器；自主执行按当前运行时能力映射。测试证据根据影响面选择原生直引或细粒度链路，高风险证明比较实际业务事实。
 
 ### ⚠️ 行为变化
 

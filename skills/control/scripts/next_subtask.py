@@ -54,7 +54,7 @@ def find_task_dir(keyword: str | None) -> Path:
     """选择目标任务目录。优先级：keyword > active-control 文件 > 唯一候选。
 
     worktree 不绑定任务，命名约定纯粹是人类可读性建议。
-    多激活时通过 .claude/local/active-control 显式指定（每个 worktree 独立）。
+    多激活时通过 .agents/local/active-control 显式指定（每个 worktree 独立）。
     """
     candidates = list_active_task_dirs()
     if not candidates:
@@ -80,7 +80,7 @@ def find_task_dir(keyword: str | None) -> Path:
             return matched[0]
         print(
             f"⚠ active-control 文件指向 '{active}'，但未找到匹配的活跃任务（可能已归档或重命名）。\n"
-            f"  请检查 .claude/local/active-control 或运行 set_active.py --clear 清除。",
+            f"  请检查 .agents/local/active-control 或运行 set_active.py --clear 清除。",
             file=sys.stderr,
         )
 
@@ -90,7 +90,7 @@ def find_task_dir(keyword: str | None) -> Path:
     names = "\n  ".join(d.name for d in candidates)
     raise SystemExit(
         f"存在多个活跃任务，请加关键词或先设置激活：\n"
-        f"  python3 ~/.claude/skills/control/scripts/set_active.py <关键词>\n\n"
+        f"  python3 ~/.agents/skills/control/scripts/set_active.py <关键词>\n\n"
         f"候选：\n  {names}"
     )
 

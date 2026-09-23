@@ -1,6 +1,6 @@
 # Praxis
 
-> 一套给「AI 驱动开发」立规矩的 Claude Code skill 方法论库。
+> 一套给「AI 驱动开发」立规矩的通用 Agent Skills 方法论库。
 > 让 AI 写代码又快又不失控——文档不漂移、评审不走过场、大任务不越界、施工范围不失控。
 
 ![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
@@ -11,7 +11,7 @@
 
 ## 这是什么
 
-Praxis 是一组可直接装进 [Claude Code](https://claude.com/claude-code) 的 **skill**（技能）。
+Praxis 是一组按 `.agents` 约定组织、可供支持 Agent Skills 的工具使用的 **skill**（技能）。
 每个 skill 是一份 AI 自动加载、照着执行的工作流规范。它们覆盖 AI 辅助开发的全链路：
 反推文档、分层治理、设计、施工、测试、评审、自主执行、任务编排、Git 流程。
 
@@ -49,7 +49,7 @@ Praxis 的 skill（通用引擎，留白挂载点）
 2. **七层文档** · [doc-layer-system](docs/doc-layer-system.md) —— 项目招牌
    给代码与文档建立分层治理，让两者永不脱节；死亡线区域强制真人把关。
 3. **对抗评审** · [adversarial-review](docs/adversarial-review.md)
-   同一份方案，两个不同模型各出一份独立评审，主线程逐条裁决。**同一对象只开放一次**，整改转[封闭验收](docs/closed-remediation-review.md)——既防评审走过场，也防评审无限加码。
+   触发时由用户选本机可用桥接和模型，至少一名评审者独立调查，主线程逐条裁决。**同一对象只开放一次**，整改转[封闭验收](docs/closed-remediation-review.md)——既防评审走过场，也防评审无限加码。
 
 > 只想先试一个？从 **总控** 开始。
 
@@ -80,21 +80,20 @@ Praxis 不把“当前交互方”默认视为全部权限的持有人。任务�
 
 ## 安装
 
-把 `skills/` 下你需要的目录拷进 Claude Code 的 skill 目录：
+把 `skills/` 下你需要的目录拷进用户级 skill 目录：
 
 ```bash
 # 全部安装
-cp -R skills/* ~/.claude/skills/
+cp -R skills/* ~/.agents/skills/
 
 # 或只装你要的
-cp -R skills/adversarial-review ~/.claude/skills/
+cp -R skills/adversarial-review ~/.agents/skills/
 ```
 
 > 同级目录很重要：部分 skill 之间有引用（如评审整改验收会回落到对抗评审、测试执行会回落到测试规范），
-> 安装时保持它们在 `~/.claude/skills/` 下平级即可。
+> 安装时保持它们在 `~/.agents/skills/` 下平级即可。
 
-**依赖**：多数 skill 仅用 Claude Code 内置能力。需要 [codex CLI](https://github.com/openai/codex) 的有三个：
-`adversarial-review` 的第二评审席（没有 codex 就无法完成对抗评审——skill 明确禁止单模型冒充双评审）、`codex-review` 与 `ask-codex`（没有 codex 则不可用）。`adversarial-review` 的可选评审者（Grok / GLM / Kimi）另需 Cursor CLI 并登录，不点选就不需要。
+**依赖**：多数 skill 只需当前 Agent 工具。`ask-codex` 与 `codex-review` 需要 Codex CLI。`adversarial-review` 在触发时检查本机 Claude Code、Cursor Agent 与 Codex CLI，由用户从实际可用模型中选择；未安装的桥接不会阻止其他桥接使用。
 
 ## Skill 总表
 
@@ -118,7 +117,6 @@ cp -R skills/adversarial-review ~/.claude/skills/
 | Skill | 一句话 | 用在什么场景 |
 |-------|--------|------------|
 | [lightweight-design](docs/lightweight-design.md) | 单次局部修改的任务级设计 | 改一个小功能，先把"改什么、怎么改"锁死 |
-| [construction-blueprint](docs/construction-blueprint.md) | 写代码前的施工蓝图（传统人工逐工序流程可选） | 仍由人逐工序把关时，动手前先出"逐文件变更图纸"；结果管控闭环不再产出蓝图 |
 
 ### 🎯 自主执行
 | Skill | 一句话 | 用在什么场景 |
@@ -137,14 +135,15 @@ cp -R skills/adversarial-review ~/.claude/skills/
 ### ⚖️ 评审
 | Skill | 一句话 | 用在什么场景 |
 |-------|--------|------------|
-| [adversarial-review](docs/adversarial-review.md) | 多模型独立评审 + 主线程裁决与排名 🐎 三驾马车 | 重要方案/代码定稿前，要一份经得起挑战的评审 |
+| [adversarial-review](docs/adversarial-review.md) | 实时选桥接/模型 + 独立评审与主线程裁决 🐎 三驾马车 | 重要方案/代码定稿前，要一份经得起挑战的评审 |
 | [closed-remediation-review](docs/closed-remediation-review.md) | 整改验收（清单冻结，不许扩张） | 评审意见回补完，核验有没有落实、有没有夹带 |
 | [codex-review](docs/codex-review.md) | 单模型低成本符合性核验 | 施工完成后，查实现有没有偏离已冻结的规格 |
 
 ### 🎨 呈现 / 可视化
 | Skill | 一句话 | 用在什么场景 |
 |-------|--------|------------|
-| [design-preview](docs/design-preview.md) | UI 形态还原成像素级 HTML 并弹浏览器 | 聊页面版式时，让人对着真图评审而不是看文字 |
+| [design-preview](docs/design-preview.md) | UI 形态还原成 HTML 并截图自检 | 聊页面版式时，让人对着真图评审而不是看文字 |
+| [site-preview](docs/site-preview.md) | 本地手机审阅目录与可选私有站点发布 | 让人用手机审阅 HTML、Markdown 与设计预览 |
 | [doc-html-style](docs/doc-html-style.md) | 桌面优先、色彩克制而丰富的文档 HTML | 把文档写成给人在电脑上读的 HTML 成品 |
 
 ### 🗣 裁决交互
@@ -177,7 +176,7 @@ cp -R skills/adversarial-review ~/.claude/skills/
 ## 贡献
 
 欢迎补充新 skill。为保持全库格式统一（skill 结构、文档四段式、脱敏纪律），
-请先读 [CONTRIBUTING.md](CONTRIBUTING.md)（规范真值源在 [CLAUDE.md](CLAUDE.md)）。
+请先读 [CONTRIBUTING.md](CONTRIBUTING.md)（规范真值源在 [AGENTS.md](AGENTS.md)）。
 
 ## 协议
 

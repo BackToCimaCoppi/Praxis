@@ -1,7 +1,6 @@
 ---
 name: ask-codex
 description: 仅手动触发。用户明确要求“问一下 codex/GPT-5.5”或“让 codex 直接执行”时，通过一次性 codex exec 提供第二意见、审查或授权内施工。已完工代码的规格符合性核验改用 codex-review。
-disable-model-invocation: true
 ---
 
 # codex 咨询 / 派任务（ask-codex）
@@ -10,7 +9,7 @@ disable-model-invocation: true
 
 **设计哲学**：人保留分工权和最终决策权。AI 不做自动路由——用户不说触发词，主线程自己处理。用户说触发词，主线程严格按触发词对应模式执行。
 
-**与「派 Claude 子代理」的根本差异**：用 `Agent` 工具起的 Claude 子代理，子代理是可持续对话的进程，派模式能"先探索汇报计划、等确认再动手"。codex 不是子代理，是一条一次性非交互命令行——**跑完即结束，没有"跑到一半停下来等确认"这回事**。因此本 skill 的派模式是**一次性直接执行**（任务+护栏一次性打包，执行完由主线程做事后 `git diff` 验收），不是"探索计划→确认→继续"的两阶段模式。
+**与可持续对话子代理的根本差异**：当前运行时的可持续对话子代理，子代理是可持续对话的进程，派模式能"先探索汇报计划、等确认再动手"。codex 不是子代理，是一条一次性非交互命令行——**跑完即结束，没有"跑到一半停下来等确认"这回事**。因此本 skill 的派模式是**一次性直接执行**（任务+护栏一次性打包，执行完由主线程做事后 `git diff` 验收），不是"探索计划→确认→继续"的两阶段模式。
 
 ---
 
@@ -90,14 +89,14 @@ codex 在这套技能体系里有三个入口，互不替代：
 
 [背景事实] — 回答此问题必须知道的关键事实（先浓缩再写入，不贴超过 5 行原始代码）
 
-[约束条件] — 从 CLAUDE.md 摘出适用条款，内嵌原文，不写"参考 CLAUDE.md"
+[约束条件] — 从 AGENTS.md 摘出适用条款，内嵌原文，不写"参考 AGENTS.md"
 
 [判断标准] — 什么算好答案
 
 [外部信息] — 非代码的参考信息（如有）
 ```
 
-填槽原则与派 Claude 子代理时一致：先浓缩再装包、每项内容过 RAM 检验句、不确定就不装、不设数字上限。
+填槽原则与派可持续对话子代理时一致：先浓缩再装包、每项内容过 RAM 检验句、不确定就不装、不设数字上限。
 
 ### 3.2 Prompt 模板
 
@@ -151,7 +150,7 @@ codex exec \
   > "$SCRATCH/ask-log.txt" 2>&1
 ```
 
-- 用 Bash 工具 `run_in_background: true` 发起（可能超 10 分钟，前台 Bash 上限容不下）。
+- 用当前运行时的后台命令或长会话机制发起。
 - 降级：加 `-c 'model_reasoning_effort="medium"'`。
 - 进程退出后再起一次 Bash，粘贴本轮记住的 `$ABS_OUT` 字面值，`cat "$ABS_OUT"` 读取结论；日志在 `$SCRATCH/ask-log.txt`。
 
@@ -174,7 +173,7 @@ codex exec \
 ▸ 禁止区（绝对不能碰的文件/目录/模块）
   - [明确排除的范围]
 
-▸ 约束（必须遵守的规则，从 CLAUDE.md 内嵌原文）
+▸ 约束（必须遵守的规则，从 AGENTS.md 内嵌原文）
   - [适用条款]
 
 ▸ 执行要求
@@ -220,7 +219,7 @@ codex exec \
   > "$SCRATCH/ask-log.txt" 2>&1
 ```
 
-- 用 Bash 工具 `run_in_background: true` 发起。
+- 用当前运行时的后台命令或长会话机制发起。
 - `workspace-write` 沙箱默认**不开网络访问**（不能装依赖、不能拉远程资源）；如任务确实需要网络（如需联网的 `mvn`/`npm` 安装），显式加 `-c sandbox_workspace_write.network_access=true`，并在向用户报告时说明已放开网络访问。
 - 降级：加 `-c 'model_reasoning_effort="medium"'`。
 - 进程退出后再起一次 Bash，`cat "$ABS_OUT"` 读取改动摘要；日志在 `$SCRATCH/ask-log.txt`。
@@ -246,10 +245,10 @@ codex exec \
 
 ## 5. 调用机制说明
 
-- **后台执行**：codex exec 用 Bash 工具 `run_in_background: true` 发起，不用前台等待（前台 Bash 上限只有 10 分钟，容不下慢速评审）。
+- **后台执行**：codex exec 用当前运行时的后台命令或长会话机制发起，避免短时前台调用截断慢速评审。
 - **scratch 隔离**：`mktemp -d` 派生本轮专属临时目录，防止多任务并发时 prompt/日志互相覆盖；机制与 `adversarial-review` §3.2 相同。
 - **stdin 必须重定向 `< /dev/null`**，否则 codex 检测到 stdin 是管道会永久阻塞。
-- **`-C` 工作目录选择**：涉及项目内容 → 项目根/对应 worktree；与项目无关的独立问题 → `/tmp`。判别标准："项目根 CLAUDE.md/AGENTS.md 是工程规约 → 进项目；不是工程规约（与项目无关的对话设定）→ 隔离到 /tmp"。
+- **`-C` 工作目录选择**：涉及项目内容 → 项目根/对应 worktree；与项目无关的独立问题 → `/tmp`。判别标准："项目根 AGENTS.md 是工程规约 → 进项目；不是工程规约（与项目无关的对话设定）→ 隔离到 /tmp"。
 - **禁止** `--dangerously-bypass-approvals-and-sandbox`——问模式无理由绕过只读沙箱；派模式的写权限已经由 `-s workspace-write` 显式声明，不需要也不允许全开权限。
 - codex exec 没有 system/user 分离，角色设定合并进 prompt 首部即可。
 

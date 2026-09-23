@@ -1,9 +1,9 @@
 # Praxis 贡献规范（AI 与人共同遵守）
 
-本文件是向 Praxis 新增或修改 skill 的**规范真值源**。任何人（含用 Claude Code 操作的 AI）
+本文件是向 Praxis 新增或修改 skill 的**规范真值源**。任何人或 AI 工具
 往本仓库加 skill 时，必须逐条对齐以下规则，使全库格式始终统一——不靠记忆、不靠自觉。
 
-> 这是 Claude Code 自动加载的项目指令。AI 在本仓工作时默认遵守本文件。
+> 本仓使用 `AGENTS.md` 和 `.agents/skills/` 约定；`skills/` 是公开分发源码目录，安装后进入用户或项目的 `.agents/skills/`。
 
 ---
 
@@ -72,7 +72,7 @@
   grep -rnE '(^|[^A-Za-z0-9])/(Users|home)/[A-Za-z0-9._-]+' skills/ docs/ README.md
 
   # ④ 家目录写法的私有路径（`~/xxx/…` 会绕过第③条；只放行 skill 安装位置与虚构示例）
-  grep -rnE '~/[A-Za-z][A-Za-z0-9._-]*/' skills/ docs/ README.md | grep -vE '~/\.(claude|agents|codex)/|~/projects/'
+  grep -rnE '~/[A-Za-z][A-Za-z0-9._-]*/' skills/ docs/ README.md | grep -vE '~/\.(agents|codex)/|~/projects/'
   ```
 
   > **为什么第 ② 条不直接字面拦 `token` / `密钥` / `secret`**：这些在技术文档里是高频普通名词——

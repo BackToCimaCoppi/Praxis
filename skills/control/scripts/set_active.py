@@ -2,7 +2,7 @@
 """
 管理当前 worktree 的激活总控配置。
 
-文件位置：`<PROJECT_ROOT>/.claude/local/active-control`（不进版本控制，每个 worktree 物理隔离）
+文件位置：`<PROJECT_ROOT>/.agents/local/active-control`（不进版本控制，每个 worktree 物理隔离）
 
 用法：
   set_active.py <关键词>      # 校验匹配后写入文件（保存任务目录精确名）

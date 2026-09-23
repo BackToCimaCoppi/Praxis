@@ -3,10 +3,10 @@
 渲染指定总控的状态表（只读）。
 
 任务目录通过扫描 docs/00-任务总控/ 下含 README.md 的子目录获得。
-多激活时通过 .claude/local/active-control 显式指定（每个 worktree 独立）。
+多激活时通过 .agents/local/active-control 显式指定（每个 worktree 独立）。
 worktree 真值用 `git worktree list`，本脚本不再镜像它。
 
-输出契约（与 control/SKILL.md 「/control status 输出契约」绑定）：
+输出契约（与 control/SKILL.md 「$control status 输出契约」绑定）：
 - status 模式输出固定 markdown 结构：`# 总控状态` 块头 + `## 子任务总表` + 五列表
   （编号 / 子任务 / 状态 / 依赖 / 预期输出）
 - 总体状态从子任务表派生，优先级：阻塞 > 进行中 > 未启动 > 已完成
@@ -94,7 +94,7 @@ def choose_task(tasks: list[ActiveTask], keyword: str | None) -> ActiveTask | No
             return bound[0]
         print(
             f"⚠ active-control 文件指向 '{active}'，但未找到匹配的活跃任务（可能已归档或重命名）。\n"
-            f"  请检查 .claude/local/active-control 或运行 set_active.py --clear 清除。\n",
+            f"  请检查 .agents/local/active-control 或运行 set_active.py --clear 清除。\n",
             file=sys.stderr,
         )
 
@@ -103,7 +103,7 @@ def choose_task(tasks: list[ActiveTask], keyword: str | None) -> ActiveTask | No
 
     print(
         "存在多份活跃总控。请加关键词，或先设置激活：\n"
-        "  python3 ~/.claude/skills/control/scripts/set_active.py <关键词>\n"
+        "  python3 ~/.agents/skills/control/scripts/set_active.py <关键词>\n"
     )
     print(list_active_tasks(tasks))
     return None

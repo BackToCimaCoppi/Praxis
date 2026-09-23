@@ -11,8 +11,8 @@ description: 仅手动触发。用户明确要求暂存、提交或推送时，�
 
 | 槽位 | 来源（按顺序探测，先命中先用） | 缺省 |
 |---|---|---|
-| 提交规范原文 | 项目指令文件（`CLAUDE.md` / `AGENTS.md`）的「提交规范」节 → `CONTRIBUTING.md` | 本 skill「Rules」的默认格式 |
-| 提交前门禁命令 | 项目补丁 skill 显式声明的命令 → `.claude/hooks/pre-handoff-check.sh` → `.claude/hooks/pre-commit-check.sh` | 无门禁，跳过 Step 0 |
+| 提交规范原文 | 项目指令文件（`AGENTS.md`）的「提交规范」节 → `CONTRIBUTING.md` | 本 skill「Rules」的默认格式 |
+| 提交前门禁命令 | 项目补丁 skill 显式声明的命令 → `.agents/hooks/pre-handoff-check.sh` → `.agents/hooks/pre-commit-check.sh` | 无门禁，跳过 Step 0 |
 | 额外首行规则 | 提交规范里声明的特殊前缀（如跨域提交标记、任务编号） | 无 |
 
 ## Required reads
@@ -33,7 +33,7 @@ description: 仅手动触发。用户明确要求暂存、提交或推送时，�
 
 ```bash
 # 按挂载点顺序探测；命中哪条跑哪条，全部不存在则跳过本步
-bash .claude/hooks/pre-handoff-check.sh
+bash .agents/hooks/pre-handoff-check.sh
 ```
 
 - 退出码非 0 → 立即停止，告知用户失败项，等修复后再触发本 skill

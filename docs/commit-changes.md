@@ -37,7 +37,7 @@
 
 2. **流程**（一步步走查）
 
-   - **Step 0 门禁（有则必跑）**：按挂载点顺序探测——项目补丁声明的命令 → `.claude/hooks/pre-handoff-check.sh` → `.claude/hooks/pre-commit-check.sh`，命中哪条跑哪条。`exit 1` → 停下，报告失败项，修完再来；有 `[WARN]` → 记下，照常往下走。没有门禁脚本则跳过本步。
+   - **Step 0 门禁（有则必跑）**：按挂载点顺序探测——项目补丁声明的命令 → `.agents/hooks/pre-handoff-check.sh` → `.agents/hooks/pre-commit-check.sh`，命中哪条跑哪条。`exit 1` → 停下，报告失败项，修完再来；有 `[WARN]` → 记下，照常往下走。没有门禁脚本则跳过本步。
    - **Step 1 看状态**：`git status --short`，分清哪些是已跟踪的修改、哪些是新文件。
    - **Step 2 读 diff**：`git diff` 看工作区、`git diff --cached` 看已暂存，判断改动主题、涉及模块、有没有混进无关改动需要拆开提交。
    - **Step 3 拟 stage 清单并等确认**：以 `git add <具体路径>` 形式列出要 stage 的文件，报给你，等你确认后才执行。**禁止 `git add -A` / `git add .`**。

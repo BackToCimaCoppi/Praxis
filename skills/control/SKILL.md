@@ -1,6 +1,6 @@
 ---
 name: control
-description: "仅手动触发。用户显式调用 /control 查看或推进 docs/00-任务总控/ 下的活跃总控时使用。只执行用户指定的 Tn，回填状态后立即停止，禁止顺带推进相邻子任务。"
+description: "仅手动触发。用户显式调用 $control 查看或推进 docs/00-任务总控/ 下的活跃总控时使用。只执行用户指定的 Tn，回填状态后立即停止，禁止顺带推进相邻子任务。"
 ---
 
 # Control
@@ -15,7 +15,7 @@ description: "仅手动触发。用户显式调用 /control 查看或推进 docs
 
 > 这是本 skill 最重要的一条。所有其他规则都让位于此。
 
-1. 用户指定 `/control <key> Tn` → **只执行 Tn**（支持 `Tn.x` 二级子任务）。不做 Tn-1，不做 Tn+1，不做同级兄弟，不"顺手"做相关任务。
+1. 用户指定 `$control <key> Tn` → **只执行 Tn**（支持 `Tn.x` 二级子任务）。不做 Tn-1，不做 Tn+1，不做同级兄弟，不"顺手"做相关任务。
 2. Tn 的「输出物」全部产出 → **立刻停止，回填状态，向用户报告**。等用户下一步指令。
 3. ✅ **读不设禁区**：可以读其他子任务详情与产出物、总控任何部分、仓库任何文件——开工前把背景挖够再动手（读什么放开 ≠ 做什么放开）
 4. ❌ 不可写入其他子任务范围（即使发现"很容易顺便做"也不要做）
@@ -46,24 +46,24 @@ description: "仅手动触发。用户显式调用 /control 查看或推进 docs
 | `<PROJECT_ROOT>/docs/00-任务总控/{YYYY-MM-DD}-{任务名}/T{n}-{子任务名}.md` | 拆分模式的一级子任务工作包 |
 | `<PROJECT_ROOT>/docs/00-任务总控/{YYYY-MM-DD}-{任务名}/T{n}/T{n}.md` | **被拆过**的父任务说明（保留背景/范围，原 T{n}-*.md 迁移到此） |
 | `<PROJECT_ROOT>/docs/00-任务总控/{YYYY-MM-DD}-{任务名}/T{n}/T{n}.{m}-{子任务名}.md` | 二级子任务工作包（split 后产生） |
-| `<PROJECT_ROOT>/.claude/local/active-control` | per-worktree 激活配置（gitignored） |
-| `<PROJECT_ROOT>/.gitignore` | 必须包含 `.claude/local/` |
+| `<PROJECT_ROOT>/.agents/local/active-control` | per-worktree 激活配置（gitignored） |
+| `<PROJECT_ROOT>/.gitignore` | 必须包含 `.agents/local/` |
 
-**项目根解析**：脚本通过 `find_project_root()` 自动定位 —— 优先 `CLAUDE_PROJECT_DIR` 环境变量，回退 `git rev-parse --show-toplevel`。仓库外执行报错。
+**项目根解析**：脚本通过 `find_project_root()` 自动定位 —— 优先 `PRAXIS_PROJECT_ROOT` 环境变量，回退 `git rev-parse --show-toplevel`。仓库外执行报错。
 
-**新项目首次使用**：跑一次 `scripts/bootstrap_project.py` 自动建好骨架。详见下面「触发模式 / `/control init`」。
+**新项目首次使用**：跑一次 `scripts/bootstrap_project.py` 自动建好骨架。详见下面「触发模式 / `$control init`」。
 
 ---
 
-## 🔒 `/control status` 输出契约（硬规则）
+## 🔒 `$control status` 输出契约（硬规则）
 
 > 这是为了消除"AI 看到脚本输出后自由排版"的问题。**所有 status 类查询的最终呈现以脚本输出为准。**
 
 触发条件（任一）：
 
-- `/control list`
-- `/control status`
-- `/control <key> status`
+- `$control list`
+- `$control status`
+- `$control <key> status`
 - 用户用同义说法询问任务列表 / 进度 / 现在做到哪儿了 / 给我一个总控任务表
 
 > **已知失效模式（必读）**：工具调用的 stdout 在部分客户端界面上会被直接渲染出来，AI 因此容易产生"用户已经看到了，我只需要追加一句结论"的错误判断，转而只输出一行总结（如"下一步可执行 Tn"）而跳过表格本身。**这个判断是错的**——第 2 步要求的是 AI **自己的最终文字回复**里包含完整表格，不是"工具输出已展示"就算数。跨模型/跨客户端都会犯这个错，必须靠下面的显式自检堵住，不能靠"应该记得"。
@@ -94,25 +94,25 @@ description: "仅手动触发。用户显式调用 /control 查看或推进 docs
 
 | 模式 | 作用 |
 |------|------|
-| `/control init` | **新项目首次使用**：建 docs/00-任务总控/ 骨架、追加 .gitignore（幂等） |
-| `/control list` | 列出所有活跃总控（最少上下文） |
-| `/control status` | 只读查看当前总控状态表 |
-| `/control <关键词>` | 进入指定总控，列出可执行子任务，等用户选 |
-| `/control <关键词> Tn` | 执行指定子任务（严格边界，支持 `Tn.x` 二级子任务） |
-| `/control <关键词> status` | 查看指定总控状态 |
-| `/control <关键词> split Tn` | 把一级父任务 Tn 拆为二级子任务 Tn.1 ~ Tn.N（用户必须先和 AI 对齐边界） |
-| `/control blocked` | 列出所有阻塞子任务 |
-| `/control switch` | 列出所有活跃总控，**交互式**让用户选一个写入激活指针 |
-| `/control use <关键词>` | 直接按关键词设置激活总控（已知目标时用，比 switch 快） |
-| `/control use --clear` | 清除激活配置 |
-| `/control use --show` | 显示当前激活配置 |
+| `$control init` | **新项目首次使用**：建 docs/00-任务总控/ 骨架、追加 .gitignore（幂等） |
+| `$control list` | 列出所有活跃总控（最少上下文） |
+| `$control status` | 只读查看当前总控状态表 |
+| `$control <关键词>` | 进入指定总控，列出可执行子任务，等用户选 |
+| `$control <关键词> Tn` | 执行指定子任务（严格边界，支持 `Tn.x` 二级子任务） |
+| `$control <关键词> status` | 查看指定总控状态 |
+| `$control <关键词> split Tn` | 把一级父任务 Tn 拆为二级子任务 Tn.1 ~ Tn.N（用户必须先和 AI 对齐边界） |
+| `$control blocked` | 列出所有阻塞子任务 |
+| `$control switch` | 列出所有活跃总控，**交互式**让用户选一个写入激活指针 |
+| `$control use <关键词>` | 直接按关键词设置激活总控（已知目标时用，比 switch 快） |
+| `$control use --clear` | 清除激活配置 |
+| `$control use --show` | 显示当前激活配置 |
 
 **关键词省略时的目标选择优先级**：
 
 1. 显式 `<关键词>`（用户传了就用这个）
-2. `.claude/local/active-control` 文件指向的任务（多激活时显式指定）
+2. `.agents/local/active-control` 文件指向的任务（多激活时显式指定）
 3. 唯一兜底：只有 1 个未归档总控时直接选中
-4. 否则报错列候选，要求加关键词或运行 `/control use <key>`
+4. 否则报错列候选，要求加关键词或运行 `$control use <key>`
 
 多候选时停止并让用户选择。
 
@@ -124,15 +124,15 @@ description: "仅手动触发。用户显式调用 /control 查看或推进 docs
 
 | 触发模式 | 必读文件 | 默认不读（非禁区） |
 |---------|---------|------|
-| `/control init` | 无（直接调脚本） | — |
-| `/control list` | `<PROJECT_ROOT>/docs/00-任务总控/README.md` | references/总控规范 / 各总控正文 |
-| `/control <key>` 或 `/control <key> status` | 上 + 目标主总控 README.md 的「任务背景」「子任务总表」 | 子任务详情段、其他子任务、references |
-| `/control <key> Tn` 或 `/control <key> Tn.x` | 上 + **该子任务详情** + 它列出的「强制阅读」文件 | 其他子任务详情、references |
-| `/control <key> split Tn` | 上 + **Tn 父任务详情**（用于和用户对齐拆分边界） | 其他子任务详情 |
+| `$control init` | 无（直接调脚本） | — |
+| `$control list` | `<PROJECT_ROOT>/docs/00-任务总控/README.md` | references/总控规范 / 各总控正文 |
+| `$control <key>` 或 `$control <key> status` | 上 + 目标主总控 README.md 的「任务背景」「子任务总表」 | 子任务详情段、其他子任务、references |
+| `$control <key> Tn` 或 `$control <key> Tn.x` | 上 + **该子任务详情** + 它列出的「强制阅读」文件 | 其他子任务详情、references |
+| `$control <key> split Tn` | 上 + **Tn 父任务详情**（用于和用户对齐拆分边界） | 其他子任务详情 |
 | 创建新总控 | `references/总控规范.md` + `task-control-doc` skill | — |
 | 归档任务 | `references/总控规范.md` §2.3 + 归档目录索引 | — |
 
-`CLAUDE.md` 由会话级注入，不需要再读。
+`AGENTS.md` 由会话级注入，不需要再读。
 
 > **「默认不读」管的是成本，不是禁区**：status / list 类只读查询别把全库读一遍。但一旦进入 **Tn 执行**，执行者可以且**应该**按需补读——「背景导航」（如有）、其他子任务详情、相关正式文档、代码现状，把背景挖够再动手（见执行流程 §3 与执行边界第 3、6 条）。旧版把「不读」当禁令，是为弱模型防上下文污染设计的；强模型时代背景不足导致误判的代价远大于多读几个文件。
 
@@ -142,20 +142,20 @@ description: "仅手动触发。用户显式调用 /control 查看或推进 docs
 
 | 脚本 | 对应触发模式 |
 |------|------------|
-| `scripts/bootstrap_project.py` | `/control init` |
-| `scripts/render_control_status.py --list` | `/control list` |
-| `scripts/render_control_status.py [关键词]` | `/control [关键词] status` |
-| `scripts/next_subtask.py [关键词]` | `/control [关键词]`（含完整会话启动提示词） |
-| `scripts/next_subtask.py [关键词] --show Tn` | `/control [关键词] Tn` —— dump 子任务详情段（支持 `Tn.x`） |
-| `scripts/split_subtask.py <关键词> Tn --subtasks "Tn.1=名1,..." [--apply]` | `/control [关键词] split Tn` —— 拆分（默认 dry-run） |
+| `scripts/bootstrap_project.py` | `$control init` |
+| `scripts/render_control_status.py --list` | `$control list` |
+| `scripts/render_control_status.py [关键词]` | `$control [关键词] status` |
+| `scripts/next_subtask.py [关键词]` | `$control [关键词]`（含完整会话启动提示词） |
+| `scripts/next_subtask.py [关键词] --show Tn` | `$control [关键词] Tn` —— dump 子任务详情段（支持 `Tn.x`） |
+| `scripts/split_subtask.py <关键词> Tn --subtasks "Tn.1=名1,..." [--apply]` | `$control [关键词] split Tn` —— 拆分（默认 dry-run） |
 | `scripts/check_write_scope.py ...` | 对本子任务候选提交做写入范围与跨任务 Markdown 段检查 |
-| `scripts/list_blocked.py` | `/control blocked` |
-| `scripts/render_control_status.py --list` → 用户选择 → `scripts/set_active.py <精确名>` | `/control switch` |
-| `scripts/set_active.py <关键词>` / `--clear` / `--show` | `/control use ...` |
+| `scripts/list_blocked.py` | `$control blocked` |
+| `scripts/render_control_status.py --list` → 用户选择 → `scripts/set_active.py <精确名>` | `$control switch` |
+| `scripts/set_active.py <关键词>` / `--clear` / `--show` | `$control use ...` |
 | `scripts/archive_control.py <关键词> --version V1 [--apply]` | 归档（默认 dry-run） |
 
 ```bash
-SKILL_DIR=~/.claude/skills/control/scripts
+SKILL_DIR=~/.agents/skills/control/scripts
 
 # 新项目首次初始化（幂等）
 python3 $SKILL_DIR/bootstrap_project.py
@@ -175,14 +175,14 @@ python3 $SKILL_DIR/next_subtask.py <关键词> --show T3
 # 阻塞盘点
 python3 $SKILL_DIR/list_blocked.py
 
-# 交互式切换激活总控（/control switch）
+# 交互式切换激活总控（$control switch）
 # 步骤：① 列出所有活跃总控 ② 向用户展示编号列表 ③ 用户选择 ④ 写入指针
 python3 $SKILL_DIR/render_control_status.py --list   # ① 获取候选列表
 # → AI 把列表以编号形式呈现给用户，等待选择
 # → 用户选定后执行：
 python3 $SKILL_DIR/set_active.py <用户选中的精确目录名>  # ④ 写入指针
 
-# 直接按关键词设置激活总控（/control use，已知目标时用）
+# 直接按关键词设置激活总控（$control use，已知目标时用）
 python3 $SKILL_DIR/set_active.py <关键词>
 python3 $SKILL_DIR/set_active.py --show
 python3 $SKILL_DIR/set_active.py --clear
@@ -206,13 +206,13 @@ python3 $SKILL_DIR/check_write_scope.py --repo . \
 
 ## 执行流程
 
-### 0. `/control switch` — 交互式切换激活指针
+### 0. `$control switch` — 交互式切换激活指针
 
 1. 运行 `render_control_status.py --list` 获取所有活跃总控
 2. 若无活跃总控 → 提示先创建，停止
 3. 若只有一个 → 直接写入，告知用户（无需选择）
 4. 若有多个 → 以编号列表形式展示给用户（`1. xxx  2. yyy`），**等待用户回复编号或关键词**
-5. 用户选定后运行 `set_active.py <精确目录名>` 写入 `.claude/local/active-control`
+5. 用户选定后运行 `set_active.py <精确目录名>` 写入 `.agents/local/active-control`
 6. 输出确认：「已将激活总控切换为：xxx」
 
 > **不读任何总控文档正文**，只需 `--list` 输出即可完成全流程。
@@ -225,7 +225,7 @@ python3 $SKILL_DIR/check_write_scope.py --repo . \
 2. 用脚本获取索引信息（`render_control_status.py` 或 `next_subtask.py`）
 3. 多候选时停止 → 列出候选，让用户选择
 4. **不要自己解析总控文档**——脚本已经处理了
-5. worktree 不绑定任务——任意 worktree 都可以切换激活总控。多激活时通过 `.claude/local/active-control` 文件确定默认目标，配置不存在且唯一总控时自动兜底
+5. worktree 不绑定任务——任意 worktree 都可以切换激活总控。多激活时通过 `.agents/local/active-control` 文件确定默认目标，配置不存在且唯一总控时自动兜底
 
 ### 2. 子任务选择
 
@@ -252,7 +252,7 @@ python3 $SKILL_DIR/check_write_scope.py --repo . \
 - 每个本子任务提交保持单一职责，不夹带无关文件；仓库中的其他提交/工作树变化不自动归给本任务，也不因其存在停机
 - 遵守「不做什么」字段（如有）
 - 子任务详情有「会话启动提示词」时按它走
-- 遵守项目本地的真值优先级与同步规则（项目自身的 CLAUDE.md / AGENTS.md）
+- 遵守项目本地的真值优先级与同步规则（项目自身的 AGENTS.md）
 
 **完成后**：
 - 先提交本子任务变更，再把这些精确候选提交逐个传给 `check_write_scope.py`；越界时回退本子任务内容或补做真实上游范围裁决，禁止事后扩白名单让检查变绿
@@ -278,7 +278,7 @@ python3 $SKILL_DIR/check_write_scope.py --repo . \
 
 如需主线程内 spawn agent（少数场景），prompt 必须注入边界声明（见 `references/总控规范.md` §4.3）：禁止接管任务调度、只做指定编号子任务。
 
-### 5.5 `/control <key> split Tn` —— 中途拆分父任务
+### 5.5 `$control <key> split Tn` —— 中途拆分父任务
 
 > 触发场景：用户在执行过程中发现某个一级任务 Tn 太大、单一会话做不完，需要原地拆为 Tn.1 ~ Tn.N 二级子任务继续推进。
 
@@ -290,7 +290,7 @@ python3 $SKILL_DIR/check_write_scope.py --repo . \
 
 **执行流程**：
 
-1. 用户敲 `/control <key> split Tn`，或用自然语言"把 T3 拆一下"
+1. 用户敲 `$control <key> split Tn`，或用自然语言"把 T3 拆一下"
 2. AI 读取 Tn 父任务详情（用 `next_subtask.py --show Tn`），向用户呈现当前状态
 3. AI **询问**用户：要拆为几个子任务、每个子任务负责什么、命名建议是什么
 4. 用户答复后，AI **重复一次拆分计划**让用户确认（"拆 T3 为：T3.1=表设计、T3.2=接口契约、T3.3=Migration，理由：T3 工作量超出预期 —— 确认吗？"）
@@ -325,7 +325,7 @@ python3 $SKILL_DIR/check_write_scope.py --repo . \
 任务整体完成时（不是子任务完成时） → 用户确认后调脚本：
 
 ```bash
-python3 ~/.claude/skills/control/scripts/archive_control.py <关键词> --version V1 --apply
+python3 ~/.agents/skills/control/scripts/archive_control.py <关键词> --version V1 --apply
 ```
 
 脚本自动同步索引并迁移目录到 `归档/V{x}/`。归档前会校验所有子任务必须为 `已完成` 或 `已取消`。

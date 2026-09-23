@@ -1,6 +1,6 @@
 """control skill 脚本共享工具。
 
-模块加载时即定位项目根（通过 CLAUDE_PROJECT_DIR 或 git rev-parse），
+模块加载时即定位项目根（通过 PRAXIS_PROJECT_ROOT 或 git rev-parse），
 所有脚本通过 import 此模块得到统一的路径常量。
 """
 from __future__ import annotations
@@ -17,11 +17,11 @@ def find_project_root() -> Path:
     """定位当前项目根目录。
 
     优先级：
-    1. CLAUDE_PROJECT_DIR 环境变量
+    1. PRAXIS_PROJECT_ROOT 环境变量
     2. git rev-parse --show-toplevel
     3. 报错（脚本必须在 git 仓库内执行）
     """
-    if env := os.environ.get("CLAUDE_PROJECT_DIR"):
+    if env := os.environ.get("PRAXIS_PROJECT_ROOT"):
         return Path(env)
     try:
         output = subprocess.check_output(
@@ -35,14 +35,14 @@ def find_project_root() -> Path:
         pass
     raise SystemExit(
         "control skill 必须在 git 仓库内执行"
-        "（或设置 CLAUDE_PROJECT_DIR 环境变量）"
+        "（或设置 PRAXIS_PROJECT_ROOT 环境变量）"
     )
 
 
 PROJECT_ROOT = find_project_root()
 CONTROL_ROOT = PROJECT_ROOT / "docs/00-任务总控"
 ARCHIVE_ROOT = CONTROL_ROOT / ARCHIVE_DIR_NAME
-ACTIVE_FILE = PROJECT_ROOT / ".claude/local/active-control"
+ACTIVE_FILE = PROJECT_ROOT / ".agents/local/active-control"
 
 
 def has_main_doc(task_dir: Path) -> bool:
@@ -65,7 +65,7 @@ def list_active_task_dirs() -> list[Path]:
 
 
 def read_active_control() -> str | None:
-    """读 .claude/local/active-control 文件内容（任务目录精确名）。"""
+    """读 .agents/local/active-control 文件内容（任务目录精确名）。"""
     if not ACTIVE_FILE.exists():
         return None
     content = ACTIVE_FILE.read_text(encoding="utf-8").strip()
