@@ -89,8 +89,8 @@ section{padding:34px clamp(24px,3vw,42px);margin-top:24px;border:1px solid var(-
 <p>附件要先提供给当前聊天；链接需要 AI 实际有权访问。也可以只说“用长文共读带我理解这份材料”，再正常聊天。这里的命令是聊天里的约定，不是在终端执行。</p>
 
 </div><div class="setup-step"><h3><span class="step-tag">STEP 02</span>建个读者档案，或者跳过</h3>
-<p>读者档案也叫“角色卡”，是一份给 AI 看的阅读说明，记录你的背景、阅读目的和讲解偏好。第一次可以这样介绍自己：</p>
-<div class="codeblock"><div class="codebar"><span>档案示例 · 按你的情况修改</span><button type="button" class="copy-button" data-copy="command-2" aria-label="复制档案示例">复制</button></div><pre><code id="command-2">profile create 工作阅读
+<p>角色卡记录你以什么身份读材料，以及你的知识背景和关注点。例如，“运营负责人”就是一个读者角色；卡片里再写清你熟悉什么、想弄懂什么。第一次可以这样介绍自己：</p>
+<div class="codeblock"><div class="codebar"><span>档案示例 · 按你的情况修改</span><button type="button" class="copy-button" data-copy="command-2" aria-label="复制档案示例">复制</button></div><pre><code id="command-2">profile create 运营负责人
 我做运营，想读懂订单方案。开发术语不熟悉，
 请用短句和日常例子；我问细节时再展开。</code></pre></div>
 <p>AI 会展示一张档案卡，确认内容和是否设为默认后保存。不确定自己懂什么也没关系，未知可以留空。想先读就说“先不建档”。</p>
@@ -109,26 +109,27 @@ section{padding:34px clamp(24px,3vw,42px);margin-top:24px;border:1px solid var(-
 
 </section>
 <section id="profiles"><div class="section-head"><span class="index">06</span><h2>角色卡：让 AI 知道该怎么给你讲</h2><span class="en">READER PROFILES</span></div>
-<p><strong>角色卡，就是一份给 AI 看的阅读说明。</strong>它描述读者的工作或学习背景、熟悉和希望补充的知识、常读的材料，以及喜欢的讲解方式。前文的“读者档案”和命令里的 <code>profile</code>，指的都是它。</p>
+<p><strong>角色卡，是对一个读者身份的具体描述。</strong>这里的角色指读者，例如“运营负责人”或“后端工程师”。卡片进一步说明这个角色的知识背景、关注点和讲解偏好，让 AI 知道在给谁讲。前文的“读者档案”和命令里的 <code>profile</code>，指的都是它。</p>
 <p>比如，你可以建立这样一张卡。下面的信息由读者自己提供，AI 不会仅凭“做运营”就判断你不懂技术。</p>
 <div class="table-wrap" tabindex="0" role="region" aria-label="角色卡示例"><table><thead><tr><th scope="col">卡片内容</th><th scope="col">一个虚构示例</th></tr></thead><tbody>
-<tr><td>名称</td><td>工作阅读</td></tr>
+<tr><td>角色名称</td><td>运营负责人</td></tr>
 <tr><td>背景与知识</td><td>负责运营，熟悉订单业务，不熟悉开发术语。</td></tr>
 <tr><td>阅读目的</td><td>读懂订单方案，重点看业务影响和异常处理。</td></tr>
 <tr><td>讲解偏好</td><td>用中文短句，先讲结论；需要时举日常例子，追问后再展开。</td></tr>
 </tbody></table></div>
 <p><strong>为什么要保存它？</strong>下一次读新材料时，你不用重新介绍自己，AI 就有了选择讲解深度的起点。它仍会根据你的追问调整：卡片没有写的，可以暂时未知；一次提问也不会自动把你永久记成“不懂”。</p>
 <h3>先建立，再选择使用哪一张</h3>
-<p>说 <code>profile create 工作阅读</code>，再介绍自己的情况。AI 会整理成卡片，请你确认内容，并询问是否以后默认使用；确认后才保存。也可以说“先不建档”，直接开始阅读。</p>
-<p>同一个人可以有多张卡：例如“工作阅读”用于审阅方案，另一张“学习阅读”用于理解陌生领域。它们对应不同的阅读目的和讲解偏好。多人使用时，也可以各自建立卡片，分别保存阅读记录。</p>
+<p>说 <code>profile create 运营负责人</code>，再介绍自己的情况。AI 会整理成卡片，请你确认内容，并询问是否以后默认使用；确认后才保存。也可以说“先不建档”，直接开始阅读。</p>
+<p>同一份订单方案，“运营负责人”可能先关心用户会遇到什么问题、异常怎么处理；“后端工程师”则更关注状态变化、重复通知和失败重试。两张角色卡把不同的背景与关注点告诉 AI，讲解的起点就不同。</p>
+<p>一个人兼任不同职责时，可以分别建立对应的角色卡；多人使用时，也可以各自建卡、分别保存阅读记录。角色名只是入口，具体懂什么仍以读者提供的信息为准。</p>
 <p>已有卡片后，可以用 <code>profile list</code> 查看名称，再选择。这里有两个容易混淆的操作：</p>
-<div class="profiles-compare"><div class="profile-choice"><small>当前会话</small><h3>这次按哪张卡讲</h3><code>profile use 学习阅读</code><p>只切换本次阅读，不改以后的默认。</p></div><div class="profile-choice"><small>未来新会话</small><h3>下次自动用哪张卡</h3><code>profile default 工作阅读</code><p>只设置未来默认，不切换当前正在使用的卡片。</p></div></div>
+<div class="profiles-compare"><div class="profile-choice"><small>当前会话</small><h3>这次按哪张卡讲</h3><code>profile use 后端工程师</code><p>只切换本次阅读，不改以后的默认。</p></div><div class="profile-choice"><small>未来新会话</small><h3>下次自动用哪张卡</h3><code>profile default 运营负责人</code><p>只设置未来默认，不切换当前正在使用的卡片。</p></div></div>
 <p><code>profile off</code> 表示这次不用角色卡；<code>profile default none</code> 表示以后默认不用。没有卡片仍能正常共读，AI 会根据你在当前聊天中提供的信息调整讲解。</p>
-<p>想长期修改偏好，可以说 <code>profile edit 工作阅读，以后少用类比，直接解释条件</code>。临时说“这次讲细一点”，只调整当前阅读。</p>
+<p>想长期修改偏好，可以说 <code>profile edit 运营负责人，以后少用类比，直接解释条件</code>。临时说“这次讲细一点”，只调整当前阅读。</p>
 <div class="resume-strip"><h3>续读记录：记住这篇材料聊到哪里</h3>
-<div class="key-message"><strong>角色卡记“你希望怎么读”；续读记录记“这篇已经读到哪里”。</strong>建立角色卡，不会自动保存每次阅读进度。</div>
+<div class="key-message"><strong>角色卡记“你是谁、懂什么、关心什么”；续读记录记“这篇已经读到哪里”。</strong>建立角色卡，不会自动保存每次阅读进度。</div>
 <p>准备结束时说 <code>save</code>，AI 才会在当前角色卡下，为这份材料保存简短记录：已经读过和讨论的内容、仍有疑问的地方，以及你主动跳过的部分。保存的是续读所需的摘要，不是整段聊天。</p>
-<p>下次先使用同一张角色卡，再说 <code>resume &lt;文档&gt;</code>。例如，使用“工作阅读”后说“resume 订单方案”，AI 会核对来源和版本，再从尚未解决的地方继续。其他角色的阅读进度不会混进来。</p>
+<p>下次先使用同一张角色卡，再说 <code>resume &lt;文档&gt;</code>。例如，使用“运营负责人”后说“resume 订单方案”，AI 会核对来源和版本，再从尚未解决的地方继续。其他角色的阅读进度不会混进来。</p>
 <p>没有角色卡时，AI 会先问记录归谁；原文变了，就重新核对受影响的内容，不能把旧理解直接套在新版本上。角色卡与续读记录都保存在本机，不会随公开 skill 发布；共用同一系统账户的多个角色，并不构成文件访问权限隔离。</p>
 </div></section>
 
