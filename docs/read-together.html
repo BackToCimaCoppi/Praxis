@@ -4,40 +4,53 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="用 read-together 长文共读技能，通过概览、追问、复述核对，逐步读懂长篇材料。">
-<title>长文共读使用教程 · Praxis</title>
+<title>如何轻松读完 10 万行 ai 生成文档 · Praxis</title>
 <style>
-:root{color-scheme:light;--ink:#24312e;--muted:#5f6d66;--green:#205d49;--line:#dce4dc;--paper:#fffefb;--wash:#f0f5ef}
-*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:#f4f3ed;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:17px}main{max-width:920px;margin:48px auto;padding:52px 64px;background:var(--paper);border:1px solid var(--line);border-radius:16px}header{padding-bottom:26px;border-bottom:1px solid var(--line)}.eyebrow{color:var(--green);font-size:13px;letter-spacing:.12em;font-weight:700}h1{font-size:38px;line-height:1.3;margin:12px 0 18px;letter-spacing:-.02em}h2{font-size:26px;margin:48px 0 16px;line-height:1.4}h3{font-size:20px;margin:28px 0 10px}p{margin:12px 0}.lead{font-size:20px;line-height:1.7}.muted,small{color:var(--muted)}a{color:var(--green);text-underline-offset:4px}nav{display:flex;flex-wrap:wrap;gap:8px 22px;margin:22px 0 0;font-size:15px}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.88em;overflow-wrap:anywhere;background:#eef2ec;padding:2px 5px;border-radius:4px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--wash);border-left:3px solid #86aa90;border-radius:5px;padding:16px 20px;font-size:16px;line-height:1.7}pre code{background:none;padding:0}.note{background:var(--wash);padding:15px 20px;border-radius:8px;margin:22px 0}.steps{padding-left:24px}.steps li{padding:5px 0}table{border-collapse:collapse;width:100%;font-size:15px;margin:16px 0 22px;table-layout:fixed}th,td{text-align:left;vertical-align:top;padding:12px 14px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:var(--wash);font-weight:600}th:first-child,td:first-child{width:40%}td code{background:transparent;padding:0}.chat{border:1px solid var(--line);border-radius:9px;overflow:hidden;margin:18px 0}.turn{padding:16px 20px;border-top:1px solid var(--line)}.turn:first-child{border-top:none}.turn.reader{background:#f8f6f0}.speaker{font-size:13px;font-weight:700;color:var(--green);margin-bottom:5px}.turn p{margin:4px 0}.turn .muted{font-size:14px}footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}@media(max-width:700px){body{font-size:16px}main{margin:0;padding:30px 20px;border:0;border-radius:0}h1{font-size:32px}h2{font-size:24px}th,td{padding:10px 7px}th:first-child,td:first-child{width:43%}}@media print{body{background:white}main{margin:0;max-width:none;padding:10px;border:0}nav{display:none}h2,h3{break-after:avoid}tr,.turn{break-inside:avoid}a{color:inherit}}
+:root{color-scheme:light;--bg:#f2f5fa;--surface:#ffffff;--surface-2:#f7f9fc;--ink:#18263d;--muted:#58677f;--line:#dce4ef;--blue:#2058b6;--blue-soft:#eaf1ff;--teal:#08746c;--teal-soft:#e5f5f1;--amber:#8a5709;--amber-soft:#fff5df;--on-accent:#ffffff;--hero:#edf3fc;--code-bg:#15243b;--code-ink:#eef4ff;--shadow:0 16px 44px rgba(24,38,61,.07);}
+@media(prefers-color-scheme:dark){:root{color-scheme:dark;--bg:#101722;--surface:#182333;--surface-2:#1e2c40;--ink:#edf3ff;--muted:#b1c0d6;--line:#35465e;--blue:#9cc0ff;--blue-soft:#233c60;--teal:#75dfc8;--teal-soft:#173c39;--amber:#f4ca81;--amber-soft:#43361f;--on-accent:#12223b;--hero:#1c2b42;--code-bg:#0e1929;--code-ink:#eef4ff;--shadow:0 16px 44px rgba(0,0,0,.15);}}
+:root[data-theme="light"]{color-scheme:light;--bg:#f2f5fa;--surface:#ffffff;--surface-2:#f7f9fc;--ink:#18263d;--muted:#58677f;--line:#dce4ef;--blue:#2058b6;--blue-soft:#eaf1ff;--teal:#08746c;--teal-soft:#e5f5f1;--amber:#8a5709;--amber-soft:#fff5df;--on-accent:#ffffff;--hero:#edf3fc;--code-bg:#15243b;--code-ink:#eef4ff;--shadow:0 16px 44px rgba(24,38,61,.07);}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#101722;--surface:#182333;--surface-2:#1e2c40;--ink:#edf3ff;--muted:#b1c0d6;--line:#35465e;--blue:#9cc0ff;--blue-soft:#233c60;--teal:#75dfc8;--teal-soft:#173c39;--amber:#f4ca81;--amber-soft:#43361f;--on-accent:#12223b;--hero:#1c2b42;--code-bg:#0e1929;--code-ink:#eef4ff;--shadow:0 16px 44px rgba(0,0,0,.15);}
+
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:96px}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;line-height:1.85}a{color:var(--blue);text-underline-offset:4px}a:hover{text-decoration-thickness:2px}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--blue);outline-offset:4px}p{margin:12px 0}strong{font-weight:750}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.88em;overflow-wrap:anywhere;background:var(--blue-soft);color:var(--blue);padding:3px 5px;border-radius:4px}h1,h2,h3{line-height:1.4;letter-spacing:-.025em}h3{font-size:20px;margin:30px 0 14px}small,.muted{color:var(--muted)}.skip{position:fixed;top:-70px;left:20px;padding:8px 16px;z-index:20;background:var(--surface);color:var(--blue)}.skip:focus{top:10px}
+.topbar{height:68px;position:sticky;top:0;z-index:10;background:var(--surface);border-bottom:1px solid var(--line)}.topbar-inner{max-width:1380px;margin:auto;padding:0 28px;height:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{display:flex;align-items:center;gap:12px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:750}.brandmark{display:grid;place-items:center;width:32px;height:32px;background:var(--blue);color:var(--on-accent);border-radius:9px;font-size:17px}.brand small{font-size:11px;letter-spacing:.12em;display:block;line-height:1.3;font-weight:600}.topbar-right{display:flex;align-items:center;gap:20px}.edition{font-size:12px;color:var(--muted)}.theme-toggle{border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);padding:6px 12px;font-size:12px;min-width:112px}.layout{width:min(100% - 48px,1324px);margin:32px auto 72px;display:grid;grid-template-columns:190px minmax(0,1fr);gap:32px}.sidebar{position:sticky;top:100px;max-height:calc(100vh - 125px);overflow:auto;padding:8px 0}.toc-label{font-size:11px;letter-spacing:.13em;color:var(--muted);font-weight:700;margin:8px 12px 12px}.toc-group{font-size:11px;color:var(--muted);margin:28px 12px 8px}.sidebar a{display:flex;gap:12px;align-items:center;padding:9px 12px;margin:4px 0;color:var(--muted);font-size:13px;text-decoration:none;border-left:2px solid transparent;border-radius:0 8px 8px 0}.sidebar a b{font-size:11px;font-weight:500;font-variant-numeric:tabular-nums}.sidebar a[aria-current="location"],.sidebar a:hover{background:var(--blue-soft);border-left-color:var(--blue);color:var(--blue)}.side-note{border-top:1px solid var(--line);padding:20px 12px;margin-top:24px;color:var(--muted);font-size:12px;line-height:1.8}.side-note strong{color:var(--ink);display:block;margin-bottom:5px}main{min-width:0}.hero{padding:clamp(26px,3.2vw,48px);background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--blue);border-radius:20px;box-shadow:var(--shadow);position:relative;overflow:hidden}.hero-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:20px;align-items:center}.eyebrow{color:var(--blue);font-size:11px;letter-spacing:.14em;font-weight:800;margin-bottom:20px}.hero h1{margin:0;font-size:clamp(29px,3vw,43px);font-weight:780;line-height:1.35;letter-spacing:-.04em}.hero h1 span{display:block}.hero h1 .hero-number{font-size:clamp(58px,6vw,84px);letter-spacing:-.06em;color:var(--teal);line-height:1.2;margin:2px 0}.hero .lead{font-size:17px;color:var(--muted);margin:20px 0 0;line-height:1.8}.hero-caption{font-size:11px;letter-spacing:.07em;color:var(--muted);margin:0 0 10px;text-align:right}.reading-visual{padding:24px 20px;background:var(--hero);border-radius:16px;border:1px solid var(--line);margin:0}.paper-stack{width:75%;margin:0 auto 26px;background:var(--surface);border:1px solid var(--line);border-radius:7px;position:relative;padding:14px 18px;box-shadow:7px 7px 0 var(--surface-2),8px 8px 0 var(--line)}.paper-label{font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:8px}.paper-lines{display:grid;gap:7px;margin:12px 0}.paper-lines i{display:block;height:4px;background:var(--line);border-radius:2px}.paper-lines i:nth-child(2){width:85%}.paper-lines i:nth-child(3){width:60%;background:var(--teal)}.visual-arrow{text-align:center;color:var(--teal);font-size:20px;line-height:1;margin-bottom:16px}.mini-question,.mini-answer{font-size:12px;padding:10px 13px;border-radius:9px;line-height:1.5}.mini-question{background:var(--blue-soft);color:var(--blue);margin-left:20px;border:1px solid var(--line)}.mini-answer{background:var(--surface);color:var(--ink);margin:8px 20px 0 0;border:1px solid var(--line)}.mini-answer strong{color:var(--teal)}.visual-foot{font-size:11px;color:var(--teal);text-align:center;margin-top:14px;font-weight:700}.hero-bottom{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-top:1px solid var(--line);margin-top:30px;padding-top:22px}.hero-bottom p{margin:0;font-size:12px;color:var(--muted)}.start-link{display:inline-flex;gap:24px;align-items:center;background:var(--blue);color:var(--on-accent);padding:9px 17px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:700}
+section{padding:34px clamp(24px,3vw,42px);margin-top:24px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}.section-head{display:flex;align-items:baseline;gap:13px;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:22px}.section-head .index{font-size:12px;font-variant-numeric:tabular-nums;color:var(--blue);font-weight:750;letter-spacing:.05em}.section-head h2{font-size:clamp(22px,2.05vw,28px);margin:0;font-weight:750}.section-head .en{margin-left:auto;font-size:10px;letter-spacing:.1em;color:var(--muted);white-space:nowrap}.contrast-pair{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:16px 0 24px;background:var(--surface-2);border-radius:10px;border:1px solid var(--line)}.contrast-item{padding:20px 22px}.contrast-item+.contrast-item{border-left:1px solid var(--line)}.contrast-item small{display:block;font-size:11px;margin-bottom:6px;color:var(--amber)}.contrast-item h3{margin:0 0 8px;font-size:21px}.contrast-item p{font-size:14px;margin:0;color:var(--muted)}.key-message{font-size:18px;padding:18px 22px;background:var(--teal-soft);border-left:3px solid var(--teal);color:var(--ink);margin:22px 0}.key-message strong{color:var(--teal)}.research-note{background:var(--surface-2);border-left:3px solid var(--line);padding:14px 18px;margin:20px 0;color:var(--muted);font-size:13px}.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));list-style:none;padding:0;gap:0;margin:26px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);counter-reset:reading-step}.steps li{padding:20px 16px 20px 0;counter-increment:reading-step;font-size:13px;color:var(--muted);position:relative}.steps li+li{padding-left:16px;border-left:1px solid var(--line)}.steps li::before{content:'0' counter(reading-step);font-size:26px;font-weight:750;color:var(--teal);display:block;line-height:1.2;margin-bottom:12px;font-variant-numeric:tabular-nums}.steps li strong{font-size:15px;display:block;color:var(--ink);margin-bottom:6px}.steps li:not(:last-child)::after{content:'→';position:absolute;top:23px;right:16px;color:var(--teal);font-size:17px}.codeblock{margin:18px 0;border-radius:10px;overflow:hidden;background:var(--code-bg);color:var(--code-ink)}.codebar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 16px;border-bottom:1px solid var(--line);font-size:11px;letter-spacing:.03em}.copy-button{background:transparent;border:1px solid var(--line);color:var(--code-ink);font-size:11px;padding:3px 9px;border-radius:5px;min-width:58px}.codeblock pre{margin:0;padding:16px 20px;overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7}.codeblock code{background:none;color:inherit;padding:0}.setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.setup-step{min-width:0}.setup-step+.setup-step{border-left:1px solid var(--line);padding-left:24px}.setup-step h3{margin:0 0 12px;font-size:18px}.setup-step p{font-size:14px}.step-tag{color:var(--blue);font-size:11px;font-weight:800;display:block;margin-bottom:6px}.chat{margin:22px 0 18px}.exchange{display:grid;grid-template-columns:125px minmax(0,1fr);gap:20px;padding:24px 0;border-top:1px solid var(--line)}.exchange:first-child{border-top:0;padding-top:0}.exchange-label{font-size:12px;color:var(--muted);padding-top:7px;line-height:1.6}.exchange-label b{font-size:11px;color:var(--teal);display:block;margin-bottom:5px}.turn{padding:14px 18px;border-left:2px solid var(--teal);background:var(--surface-2);border-radius:0 9px 9px 0;margin-top:12px}.turn.reader{border-left-color:var(--blue);background:var(--blue-soft);margin:0 0 0 26px}.speaker{font-size:11px;font-weight:750;color:var(--teal);margin-bottom:5px}.reader .speaker{color:var(--blue)}.turn p{font-size:14px;line-height:1.8;margin:3px 0}.turn .muted{font-size:12px}.understanding{color:var(--teal);font-weight:700}.profiles-compare{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:22px 0}.profile-choice{padding:20px;background:var(--surface-2)}.profile-choice+.profile-choice{border-left:1px solid var(--line)}.profile-choice h3{margin:5px 0 10px;font-size:18px}.profile-choice p{font-size:13px;margin:9px 0 0}.profile-choice small{font-size:11px;color:var(--blue)}.profile-choice:last-child small{color:var(--teal)}.resume-strip{border-top:1px solid var(--line);margin-top:26px;padding-top:22px}.resume-strip h3{margin-top:0}.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;margin:16px 0 24px}table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums;min-width:540px}th,td{text-align:left;vertical-align:top;padding:13px 17px;border-bottom:1px solid var(--line)}th{font-size:11px;font-weight:750;letter-spacing:.05em;background:var(--surface-2);color:var(--muted)}tr:last-child td{border-bottom:0}th:first-child,td:first-child{width:37%}td code{background:transparent;padding:0;color:var(--blue);white-space:nowrap}tbody tr:hover{background:var(--surface-2)}.limits-list{list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:22px 28px}.limits-list li{font-size:13px;color:var(--muted);padding-left:15px;border-left:2px solid var(--amber)}.limits-list strong{display:block;color:var(--ink);font-size:15px;margin-bottom:6px}footer{padding:28px 4px 0;display:flex;gap:20px;justify-content:space-between;align-items:baseline;color:var(--muted);font-size:11px}footer strong{font-size:12px;color:var(--ink)}.back-top{color:var(--blue);white-space:nowrap}.theme-toggle:hover,.copy-button:hover{border-color:var(--blue)}
+@media(min-width:1400px){.layout{gap:42px;grid-template-columns:200px minmax(0,1fr)}}
+@media(max-width:1000px){.layout{grid-template-columns:160px minmax(0,1fr);gap:20px;width:calc(100% - 32px)}.hero-grid{grid-template-columns:1.2fr 1fr;gap:14px}.reading-visual{padding:16px 12px}.hero{padding:28px}.hero h1{font-size:29px}.hero h1 .hero-number{font-size:62px}.section-head .en{display:none}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.steps li:nth-child(3){border-left:0;padding-left:0;border-top:1px solid var(--line)}.steps li:nth-child(4){border-top:1px solid var(--line)}.setup-grid{grid-template-columns:1fr}.setup-step+.setup-step{border:0;border-top:1px solid var(--line);padding:20px 0 0}.exchange{grid-template-columns:95px minmax(0,1fr);gap:14px}}
+@media(max-width:760px){.topbar{height:60px}.topbar-inner{padding:0 18px}.edition{display:none}.layout{display:block;width:calc(100% - 28px);margin:18px auto 38px}.sidebar{position:static;max-height:none;margin-bottom:18px;padding:0;display:flex;gap:4px;overflow-x:auto}.sidebar .toc-label,.sidebar .toc-group,.sidebar .side-note{display:none}.sidebar a{white-space:nowrap;flex:none;border-left:0;border-bottom:2px solid transparent;padding:7px 10px;border-radius:5px;font-size:12px}.sidebar a[aria-current="location"]{border-bottom-color:var(--blue)}.sidebar a b{display:none}.hero{padding:26px}.hero-grid{grid-template-columns:1fr}.hero h1{font-size:32px}.hero h1 .hero-number{font-size:70px}.reading-visual{margin-top:10px;padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;align-items:center}.hero-caption,.visual-arrow,.visual-foot{display:none}.paper-stack{grid-row:1/3;margin:0;width:100%;padding:12px}.mini-question,.mini-answer{margin:0;font-size:11px}.hero .lead{font-size:15px}.hero-bottom{gap:12px}.hero-bottom p{font-size:11px}.start-link{padding:8px 14px}section{padding:24px 20px;margin-top:18px}.section-head{gap:10px}.section-head h2{font-size:22px}.contrast-pair,.profiles-compare{grid-template-columns:1fr}.contrast-item+.contrast-item,.profile-choice+.profile-choice{border-left:0;border-top:1px solid var(--line)}.exchange{grid-template-columns:1fr;gap:10px}.exchange-label b{display:inline;margin-right:10px}.exchange-label{padding-top:0}.turn.reader{margin-left:14px}.limits-list{grid-template-columns:1fr}.theme-toggle{font-size:11px;min-width:98px}.brand{font-size:13px}.brand small{font-size:9px}footer{display:block}footer .back-top{display:block;margin-top:10px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{:root,:root[data-theme="dark"],:root[data-theme="light"]{color-scheme:light;--bg:#f2f5fa;--surface:#ffffff;--surface-2:#f7f9fc;--ink:#18263d;--muted:#58677f;--line:#dce4ef;--blue:#2058b6;--blue-soft:#eaf1ff;--teal:#08746c;--teal-soft:#e5f5f1;--amber:#8a5709;--amber-soft:#fff5df;--on-accent:#ffffff;--hero:#edf3fc;--code-bg:#15243b;--code-ink:#eef4ff;--shadow:0 16px 44px rgba(24,38,61,.07);} .topbar,.sidebar,.copy-button,.back-top,.start-link{display:none!important}body{background:var(--surface);font-size:10.5pt}.layout{display:block;width:auto;margin:0}.hero,section{box-shadow:none;border-radius:0;margin-top:14px}h2,h3,.section-head{break-after:avoid}tr,.turn,.exchange,.codeblock{break-inside:avoid}.hero-number{font-size:50px!important}.table-wrap{overflow:visible}table{min-width:0}footer{display:block}}
 </style>
 </head>
 <body>
-<main>
-<header>
-<div class="eyebrow">PRAXIS / READ-TOGETHER</div>
-<h1>长文，聊着读懂</h1>
-<p class="lead">先看主线，再聊不懂的地方。<br>用自己的话说一遍，让 AI 帮你核对。</p>
-<p class="muted">长文共读使用教程 · 适用于设计方案、规格文档、论文及其他长篇材料</p>
-<nav aria-label="教程目录"><a href="#problem">为什么读得累</a><a href="#reason">AI 为什么这样写</a><a href="#method">共读怎么解决</a><a href="#start">开始使用</a><a href="#commands">命令速查</a></nav>
-</header>
-
+<a class="skip" href="#main-content">跳到正文</a>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="#top"><span class="brandmark" aria-hidden="true">共</span><span>长文共读<small>PRAXIS / READING GUIDE</small></span></a><div class="topbar-right"><span class="edition">read-together · 使用教程</span><button class="theme-toggle" id="themeToggle" type="button" aria-label="当前主题：跟随系统；点击切换为浅色">主题 · 跟随系统</button></div></div></header>
+<div class="layout" id="top">
+<nav class="sidebar" aria-label="教程目录"><p class="toc-label">CONTENTS / 阅读路线</p>
+<a href="#problem"><b>01</b>为什么读得累</a><a href="#reason"><b>02</b>AI 为什么这样写</a><a href="#method"><b>03</b>共读怎么解决</a>
+<p class="toc-group">从这里动手</p><a href="#start"><b>04</b>第一次使用</a><a href="#example"><b>05</b>一段共读示例</a><a href="#profiles"><b>06</b>角色与续读</a><a href="#commands"><b>07</b>命令速查</a><a href="#limits"><b>08</b>使用边界</a>
+<div class="side-note"><strong>先看主线，再按需深入。</strong>阅读的节奏由你决定。<br>想快一点，直接跳到使用方法。</div></nav>
+<main id="main-content">
+<header class="hero"><div class="hero-grid"><div><div class="eyebrow">READ LESS. UNDERSTAND MORE.</div><h1><span>如何轻松读完</span> <span class="hero-number">10 万行</span> <span>ai 生成文档</span></h1><p class="lead">先看主线，再聊不懂的地方。<br>用自己的话说一遍，让 AI 帮你核对。</p></div>
+<figure class="reading-visual" aria-label="把长篇文档变成按需展开的共读对话"><figcaption class="hero-caption">从原文出发 · 在对话中理解</figcaption><div class="paper-stack" aria-hidden="true"><div class="paper-label"><span>一份很长的文档</span><span>···</span></div><div class="paper-lines"><i></i><i></i><i></i><i></i><i></i></div></div><div class="visual-arrow" aria-hidden="true">↓</div><div class="mini-question">先给我主线，这一处再展开。</div><div class="mini-answer">讲清关系，核对理解，<br><strong>补上没问到的重要条件。</strong></div><div class="visual-foot">概览 → 深入 → 核对 → 补遗漏</div></figure></div>
+<div class="hero-bottom"><p>设计方案 / 规格文档 / 论文 / 其他长篇材料</p><a class="start-link" href="#start">开始第一次共读 <span aria-hidden="true">↗</span></a></div></header>
 <section id="problem">
-<h2>一、难的常常不是字多</h2>
-<p>打开一份长方案，你可能遇到两种情况：写得很短，满篇术语，省掉了你需要的解释；写得很长，背景、细节和重复说明挤在一起，关键条件反而难找。</p>
-<p>同一段内容，对一个人是必要背景，对另一个人就是废话。你真正需要的，是把<strong>已经知道的略过，把没弄清楚的讲透</strong>。</p>
+<div class="section-head"><span class="index">01</span><h2>为什么读得累</h2><span class="en">THE PROBLEM</span></div>
+<div class="contrast-pair"><div class="contrast-item"><small>写得太简洁</small><h3>每个词都认识，连起来看不懂。</h3><p>术语留下了，关系和必要的解释却被省掉。</p></div><div class="contrast-item"><small>写得太详细</small><h3>读了很久，还是抓不到重点。</h3><p>已知背景、重复说明和关键条件，全挤在一起。</p></div></div>
+<p>同一段内容，对一个人是必要背景，对另一个人就是废话。</p><div class="key-message">你需要的，是把<strong>已经知道的略过，把没弄清楚的讲透。</strong></div>
 <p>“先给我摘要”是个好开头。但只看摘要还有一个盲区：你可能根本不知道，自己漏问了哪个重要问题。</p>
 </section>
 
 <section id="reason">
-<h2>二、AI 不知道你脑子里已经有什么</h2>
+<div class="section-head"><span class="index">02</span><h2>AI 不知道你脑子里已经有什么</h2><span class="en">THE REASON</span></div>
 <p>语言模型根据已有文字和当前上下文，一步步生成后续内容。它能利用你提供的背景，却不能直接知道你的知识边界。这个生成方式的基础说明，见 <a href="https://developers.google.com/machine-learning/crash-course/llm">Google 的语言模型介绍</a>。</p>
 <p>因此，当读者背景和目的不清楚时，AI 只能选择一种讲法：可能压缩太多，只剩名词；也可能补充太多，把你早就懂的内容又讲一遍。这是对实际写作问题的解释，并不意味着所有冗长都有同一个原因。</p>
 <p>业界的一个基本做法是先明确受众，再决定解释什么。Google 的技术写作课程强调：应补充读者完成任务所需、但目前还不知道的知识；同一职业也不代表拥有相同知识。见 <a href="https://developers.google.com/tech-writing/one/audience">Audience：面向谁写</a>。</p>
-<p>研究中也观察过“偏爱更长回答”的现象。<a href="https://arxiv.org/abs/2310.10076">一项 2023 年研究</a>发现，在它的实验设置中，GPT-4 评价回答时比人类更偏好长答案。这不能推出所有模型都在奖励字数，更不能用来解释每一篇长文。</p>
-<p><strong>对阅读最直接的改进，是把“你需要什么解释”不断反馈给 AI。</strong></p>
+<p class="research-note">研究中也观察过“偏爱更长回答”的现象。<a href="https://arxiv.org/abs/2310.10076">一项 2023 年研究</a>发现，在它的实验设置中，GPT-4 评价回答时比人类更偏好长答案。这不能推出所有模型都在奖励字数，更不能用来解释每一篇长文。</p>
+<div class="key-message">对阅读最直接的改进，是把<strong>“你需要什么解释”不断反馈给 AI。</strong></div>
 </section>
 
 <section id="method">
-<h2>三、把一次性讲完，改成一起弄明白</h2>
+<div class="section-head"><span class="index">03</span><h2>把一次性讲完，改成一起弄明白</h2><span class="en">THE METHOD</span></div>
 <p><code>read-together</code> 是一份共读规则，告诉 AI 怎样陪你读。它先消化原文，再围绕你的问题组织讲解；需要核对时才回到具体章节。你不用读一串原文摘录，也不用从头按章节上课。</p>
 <ol class="steps">
 <li><strong>先看主线。</strong>这份材料想解决什么，几个关键问题怎样相连。</li>
@@ -49,52 +62,49 @@
 </section>
 
 <section id="start">
-<h2>四、从第一次使用开始</h2>
-<h3>1. 安装，然后给一份材料</h3>
+<div class="section-head"><span class="index">04</span><h2>从第一次使用开始</h2><span class="en">GET STARTED</span></div>
+<div class="setup-grid"><div class="setup-step"><h3><span class="step-tag">STEP 01</span>安装，然后给一份材料</h3>
 <p>下载 Praxis 仓库，把 <code>skills/read-together/</code> 整个目录复制到 <code>~/.agents/skills/</code>。它可以独立使用，不需要其他 Praxis skill。</p>
 <p>你需要一个能加载该技能目录、读取材料和操作本机文件的 Agent 工具。若工具还没发现新技能，按它的说明重新加载或新建会话；不同客户端的发现方式可能不同。</p>
 <p>在聊天框输入，替换尖括号里的内容：</p>
-<pre><code>$read-together read &lt;文档路径、附件或链接&gt;</code></pre>
+<div class="codeblock"><div class="codebar"><span>在聊天中输入</span><button type="button" class="copy-button" data-copy="command-1" aria-label="复制开始命令">复制</button></div><pre><code id="command-1">$read-together read &lt;文档路径、附件或链接&gt;</code></pre></div>
 <p>附件要先提供给当前聊天；链接需要 AI 实际有权访问。也可以只说“用长文共读带我理解这份材料”，再正常聊天。这里的命令是聊天里的约定，不是在终端执行。</p>
 
-<h3>2. 建个读者档案，或者直接跳过</h3>
+</div><div class="setup-step"><h3><span class="step-tag">STEP 02</span>建个读者档案，或者跳过</h3>
 <p>第一次，AI 会简短了解你的背景、阅读目的和讲解偏好。你可以这样回答：</p>
-<pre><code>profile create 工作阅读
+<div class="codeblock"><div class="codebar"><span>档案示例 · 按你的情况修改</span><button type="button" class="copy-button" data-copy="command-2" aria-label="复制档案示例">复制</button></div><pre><code id="command-2">profile create 工作阅读
 我做运营，想读懂订单方案。开发术语不熟悉，
-请用短句和日常例子；我问细节时再展开。</code></pre>
+请用短句和日常例子；我问细节时再展开。</code></pre></div>
 <p>AI 会展示一张档案卡，确认内容和是否设为默认后保存。不确定自己懂什么也没关系，未知可以留空。想先读就说“先不建档”。</p>
 
-<h3>3. 像这样聊，而不是一页页翻</h3>
+</div></div></section>
+<section id="example"><div class="section-head"><span class="index">05</span><h2>像这样聊，把一处问题弄明白</h2><span class="en">IN CONVERSATION</span></div>
 <p class="muted">下面是一份虚构订单方案的示例。例中的规则只用于说明共读方式。</p>
 <div class="chat">
-<div class="turn reader"><div class="speaker">你 · 看主线</div><p>先讲这个方案在解决什么。</p></div>
-<div class="turn"><div class="speaker">AI</div><p>它想减少未付款订单长期占用库存。主线是：到期后核实付款情况，确认没付才关闭；付款状态不明就等待核查。还要处理“订单关了，付款通知才到”的情况。方案只适用于普通商品。</p></div>
-<div class="turn reader"><div class="speaker">你 · 选一处深入</div><p><code>explain 订单关了以后，才收到付款通知怎么办</code></p></div>
-<div class="turn"><div class="speaker">AI</div><p>原订单不会重新打开，而是进入退款流程。可以理解为货已经不再为这笔订单保留，所以先处理退钱。退款若失败，需要人工接手；不能在钱还没退回时告诉用户“已退款”。</p><p class="muted">依据：示例方案的“迟到付款”与“退款异常”两节。</p></div>
-<div class="turn reader"><div class="speaker">你 · 复述</div><p><code>check 所以只要收到迟到的付款通知，用户就已经拿回钱了。</code></p></div>
-<div class="turn"><div class="speaker">AI</div><p>还差一步：收到通知后只是开始退款。只有退款成功，才能说钱已退回；失败时还需要人工处理。</p></div>
-<div class="turn reader"><div class="speaker">你</div><p>明白了：订单不恢复，先发起退款，结果确认成功才算退完。</p></div>
-<div class="turn"><div class="speaker">AI</div><p>对，这样理解准确。</p></div>
-<div class="turn reader"><div class="speaker">你 · 补缺口</div><p><code>progress</code></p></div>
-<div class="turn"><div class="speaker">AI</div><p>迟到付款这条线已经聊清楚。还有两个关键点没展开：付款查询失败时怎样处理，以及预售订单为什么不适用。讨论过的内容也不自动等于已经掌握。</p></div>
+<div class="exchange"><div class="exchange-label"><b>01 / 概览</b>先找到主线</div><div><div class="turn reader"><div class="speaker">你 · 看主线</div><p>先讲这个方案在解决什么。</p></div><div class="turn"><div class="speaker">AI</div><p>它想减少未付款订单长期占用库存。主线是：到期后核实付款情况，确认没付才关闭；付款状态不明就等待核查。还要处理“订单关了，付款通知才到”的情况。方案只适用于普通商品。</p></div></div></div>
+<div class="exchange"><div class="exchange-label"><b>02 / 深入</b>只展开你关心的</div><div><div class="turn reader"><div class="speaker">你 · 选一处深入</div><p><code>explain 订单关了以后，才收到付款通知怎么办</code></p></div><div class="turn"><div class="speaker">AI</div><p>原订单不会重新打开，而是进入退款流程。可以理解为货已经不再为这笔订单保留，所以先处理退钱。退款若失败，需要人工接手；不能在钱还没退回时告诉用户“已退款”。</p><p class="muted">依据：示例方案的“迟到付款”与“退款异常”两节。</p></div></div></div>
+<div class="exchange"><div class="exchange-label"><b>03 / 核对</b>发现理解的偏差</div><div><div class="turn reader"><div class="speaker">你 · 复述</div><p><code>check 所以只要收到迟到的付款通知，用户就已经拿回钱了。</code></p></div><div class="turn"><div class="speaker">AI</div><p>还差一步：收到通知后只是开始退款。只有退款成功，才能说钱已退回；失败时还需要人工处理。</p></div></div></div>
+<div class="exchange"><div class="exchange-label"><b>04 / 确认</b>说对了就确认</div><div><div class="turn reader"><div class="speaker">你</div><p>明白了：订单不恢复，先发起退款，结果确认成功才算退完。</p></div><div class="turn"><div class="speaker">AI</div><p class="understanding">对，这样理解准确。</p></div></div></div>
+<div class="exchange"><div class="exchange-label"><b>05 / 补缺口</b>找出还没聊到的</div><div><div class="turn reader"><div class="speaker">你 · 补缺口</div><p><code>progress</code></p></div><div class="turn"><div class="speaker">AI</div><p>迟到付款这条线已经聊清楚。还有两个关键点没展开：付款查询失败时怎样处理，以及预售订单为什么不适用。讨论过的内容也不自动等于已经掌握。</p></div></div></div>
 </div>
 <p>你随时可以说“这段我懂了”“换个例子”“再短一点”或“先跳过”。不要求每轮复述，也没有必须答完的测验。</p>
 
-<h3>4. 区分“这次用谁”和“以后默认用谁”</h3>
-<p>可以分别建立“工作阅读”“学习阅读”等档案。<code>profile use 学习阅读</code> 只切换当前会话；<code>profile default 工作阅读</code> 只设置未来新会话的默认，不把当前会话切走。</p>
+</section>
+<section id="profiles"><div class="section-head"><span class="index">06</span><h2>这次用谁，和以后默认用谁</h2><span class="en">READER PROFILES</span></div>
+<p>可以分别建立“工作阅读”“学习阅读”等档案。两种设置，各管一件事：</p><div class="profiles-compare"><div class="profile-choice"><small>当前会话</small><h3>这次按什么背景讲</h3><code>profile use 学习阅读</code><p>只切换这次阅读，不改以后的默认。</p></div><div class="profile-choice"><small>未来新会话</small><h3>下次从哪个档案开始</h3><code>profile default 工作阅读</code><p>只修改默认，不把正在聊的角色切走。</p></div></div>
 <p><code>profile off</code> 表示这次不用档案；<code>profile default none</code> 表示以后默认不用。停用后仍能正常共读。切换时可以复用原文事实，但不会把上一位读者的背景、理解进度当作你的。</p>
 <p>想长期修改偏好，可以说 <code>profile edit 工作阅读，以后少用类比，直接解释条件</code>。临时说“这次讲细一点”只调整当前阅读，不自动改长期画像。</p>
 
-<h3>5. 保存，下次接着读</h3>
+<div class="resume-strip"><h3>保存，下次接着读</h3>
 <p>结束前说 <code>save</code>，AI 才会在当前档案下保存简短记录：读了哪些、聊了哪些、哪些待解或主动跳过。下次选同一档案，再说 <code>resume &lt;文档&gt;</code>。</p>
 <p>保存的不是整段聊天。没有档案时，AI 会先问记录归谁；不会擅自选一个人。原文版本变化后，需要重新核对受影响的内容；无法确认变化范围时，旧理解先标为待复核。</p>
-</section>
+</div></section>
 
 <section id="commands">
-<h2>命令速查</h2>
+<div class="section-head"><span class="index">07</span><h2>命令速查</h2><span class="en">QUICK REFERENCE</span></div>
 <p>先用 <code>$read-together</code> 激活；此后可以只说动作。动作词用英文，参数可以中文，也可以用自然语言表达同一个意思。</p>
 <h3>阅读</h3>
-<table><thead><tr><th scope="col">命令</th><th scope="col">做什么</th></tr></thead><tbody>
+<div class="table-wrap" tabindex="0" role="region" aria-label="命令表，可横向滚动"><table><thead><tr><th scope="col">命令</th><th scope="col">做什么</th></tr></thead><tbody>
 <tr><td><code>read &lt;来源&gt;</code></td><td>开始一份材料；保留本次档案选择。</td></tr>
 <tr><td><code>overview</code></td><td>看主线、关键问题和已读范围。</td></tr>
 <tr><td><code>explain &lt;主题&gt;</code></td><td>讲清指定问题和相关条件。</td></tr>
@@ -102,9 +112,9 @@
 <tr><td><code>progress</code></td><td>查看已讨论、待解和遗漏；不自动保存。</td></tr>
 <tr><td><code>save</code></td><td>给当前档案保存简短续读记录。</td></tr>
 <tr><td><code>resume &lt;文档&gt;</code></td><td>恢复当前档案的记录，先核对来源版本。</td></tr>
-</tbody></table>
+</tbody></table></div>
 <h3>读者档案</h3>
-<table><thead><tr><th scope="col">命令</th><th scope="col">做什么</th></tr></thead><tbody>
+<div class="table-wrap" tabindex="0" role="region" aria-label="命令表，可横向滚动"><table><thead><tr><th scope="col">命令</th><th scope="col">做什么</th></tr></thead><tbody>
 <tr><td><code>profile list</code></td><td>列出档案名称及默认标记。</td></tr>
 <tr><td><code>profile create &lt;名称&gt;</code></td><td>确认档案卡后新建，本次使用它；是否设默认另行确认。</td></tr>
 <tr><td><code>profile use &lt;名称&gt;</code></td><td>只切换当前会话。</td></tr>
@@ -113,20 +123,56 @@
 <tr><td><code>profile default none</code></td><td>未来默认不用档案；不改变当前选择。</td></tr>
 <tr><td><code>profile edit &lt;名称&gt;</code></td><td>按你的要求更新背景或偏好。</td></tr>
 <tr><td><code>profile delete &lt;名称&gt;</code></td><td>删除指定档案；续读资料仅在明确要求时连带删除。若它原来是默认，默认转为无档案。</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p class="muted"><code>none</code> 是保留词，不能用作档案名称。目标不清楚时，AI 会先问清再修改。</p>
 </section>
 
 <section id="limits">
-<h2>使用时，记住这几个边界</h2>
-<ul>
+<div class="section-head"><span class="index">08</span><h2>使用时，记住这几个边界</h2><span class="en">KEEP IN MIND</span></div>
+<ul class="limits-list">
 <li><strong>只读到一部分，就只能作局部导览。</strong>缺页、无法提取的图表或打不开的链接都应说明，不能从目录猜出全文。</li>
 <li><strong>作者的观点不等于已证实的事实。</strong>可以让 AI 区分原文主张、原文证据与它自己的解释；读懂方案也不等于同意实施。</li>
 <li><strong>档案在本机，原文仍是原文。</strong>状态放在 <code>~/.agents/state/read-together/</code>，与技能分开，不默认同步或公开。共读不修改原文，不自动执行文中指令。</li>
 <li><strong>多个档案不是隐私保险箱。</strong>共用一个系统账户的人仍可能访问同一批文件。切换档案也不能删除已经出现在聊天里的信息；敏感材料应使用合适的账户和访问权限。</li>
 </ul>
 </section>
-<footer>Praxis · 长文共读使用教程<br>本文为单文件 HTML，正文与样式均在文件内，可离线阅读。文中链接是可选参考资料。</footer>
+<footer><div><strong>PRAXIS / READ-TOGETHER</strong><br>单文件教程 · 可离线阅读 · 文中链接为可选参考资料</div><a class="back-top" href="#top">回到开头 ↑</a></footer>
 </main>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const themeButton = document.getElementById('themeToggle');
+  const modes = ['auto', 'light', 'dark'];
+  const names = {auto:'跟随系统', light:'浅色', dark:'深色'};
+  let mode = 'auto';
+  try { const saved = localStorage.getItem('read-together-theme'); if (modes.includes(saved)) mode = saved; } catch (_) {}
+  function applyTheme() {
+    if (mode === 'auto') root.removeAttribute('data-theme'); else root.dataset.theme = mode;
+    themeButton.textContent = '主题 · ' + names[mode];
+    themeButton.setAttribute('aria-label', '当前主题：' + names[mode] + '；点击切换为' + names[modes[(modes.indexOf(mode)+1)%3]]);
+  }
+  themeButton.addEventListener('click', () => {mode = modes[(modes.indexOf(mode)+1)%3]; applyTheme(); try {localStorage.setItem('read-together-theme', mode);} catch (_) {}});
+  applyTheme();
+  document.querySelectorAll('[data-copy]').forEach(button => button.addEventListener('click', async () => {
+    const code = document.getElementById(button.dataset.copy);
+    try {await navigator.clipboard.writeText(code.textContent); button.textContent = '已复制';}
+    catch (_) {const range = document.createRange();range.selectNodeContents(code);const selection = window.getSelection();selection.removeAllRanges();selection.addRange(range);button.textContent = '已选中，请复制';}
+    window.setTimeout(() => {button.textContent = '复制';}, 2200);
+  }));
+  const links = [...document.querySelectorAll('.sidebar a[href^="#"]')];
+  const sections = links.map(a => document.querySelector(a.getAttribute('href')));
+  let pending = false;
+  function updateSection() {
+    let current = sections[0];
+    for (const section of sections) if (section.getBoundingClientRect().top <= 150) current = section;
+    for (const link of links) {if (link.getAttribute('href') === '#' + current.id) link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');}
+    pending = false;
+  }
+  window.addEventListener('scroll', () => {if (!pending) {pending = true;requestAnimationFrame(updateSection);}}, {passive:true});
+  updateSection();
+})();
+</script>
+
 </body>
 </html>
