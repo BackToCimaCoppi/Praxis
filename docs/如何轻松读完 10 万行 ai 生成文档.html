@@ -81,14 +81,23 @@ section{padding:34px clamp(24px,3vw,42px);margin-top:24px;border:1px solid var(-
 
 <section id="start">
 <div class="section-head"><span class="index">04</span><h2>从第一次使用开始</h2><span class="en">GET STARTED</span></div>
-<div class="setup-grid"><div class="setup-step"><h3><span class="step-tag">STEP 01</span>安装，然后给一份材料</h3>
-<p>下载 Praxis 仓库，把 <code>skills/read-together/</code> 整个目录复制到 <code>~/.agents/skills/</code>。它可以独立使用，不需要其他 Praxis skill。</p>
-<p>你需要一个能加载该技能目录、读取材料和操作本机文件的 Agent 工具。若工具还没发现新技能，按它的说明重新加载或新建会话；不同客户端的发现方式可能不同。</p>
+<p><a href="https://github.com/BackToCimaCoppi/Praxis">Praxis</a> 是一个开源 AI 技能库，把阅读、设计、开发、测试等常用做法整理成可复用的 skill。skill 可以理解为给 AI 的一份工作指南，告诉它怎样完成某类任务。</p>
+<p>本教程使用的是其中的 <a href="https://github.com/BackToCimaCoppi/Praxis/tree/main/skills/read-together">read-together（长文共读）</a>，可以单独安装，不需要其他 Praxis skill。</p>
+<div class="setup-step"><h3><span class="step-tag">STEP 01</span>把技能装进你的 AI 工具</h3>
+<p>打开支持本地技能、能联网和读写本机文件的 AI 工具，把下面这段话发给它：</p>
+<div class="codeblock"><div class="codebar"><span>安装请求 · 复制到 AI 聊天框</span><button type="button" class="copy-button" data-copy="install-request" aria-label="复制安装请求">复制</button></div><pre><code id="install-request">请从 https://github.com/BackToCimaCoppi/Praxis
+安装 skills/read-together 这个技能。
+将完整目录保存到 ~/.agents/skills/read-together/，只安装这一个技能。
+请检查当前工具能否识别它；如果需要额外配置或重新加载，请告诉我怎么做。</code></pre></div>
+<p>也可以手动安装：打开上面的 GitHub 项目，点击 <strong>Code → Download ZIP</strong>，解压后把 <code>skills/read-together/</code> 整个目录复制到 <code>~/.agents/skills/</code>。不同工具的技能发现方式可能不同，按所用工具的说明完成配置或重新加载。</p>
+<p>普通网页聊天如果没有本机文件权限，就不能替你完成这一步。确认工具已识别 <code>read-together</code> 后，再开始阅读。</p>
+</div>
+<div class="setup-grid"><div class="setup-step"><h3><span class="step-tag">STEP 02</span>给 AI 一份要读的材料</h3>
 <p>在聊天框输入，替换尖括号里的内容：</p>
 <div class="codeblock"><div class="codebar"><span>在聊天中输入</span><button type="button" class="copy-button" data-copy="command-1" aria-label="复制开始命令">复制</button></div><pre><code id="command-1">$read-together read &lt;文档路径、附件或链接&gt;</code></pre></div>
 <p>附件要先提供给当前聊天；链接需要 AI 实际有权访问。也可以只说“用长文共读带我理解这份材料”，再正常聊天。这里的命令是聊天里的约定，不是在终端执行。</p>
 
-</div><div class="setup-step"><h3><span class="step-tag">STEP 02</span>建个读者档案，或者跳过</h3>
+</div><div class="setup-step"><h3><span class="step-tag">STEP 03</span>建个读者档案，或者跳过</h3>
 <p>角色卡记录你以什么身份读材料，以及你的知识背景和关注点。例如，“运营负责人”就是一个读者角色；卡片里再写清你熟悉什么、想弄懂什么。第一次可以这样介绍自己：</p>
 <div class="codeblock"><div class="codebar"><span>档案示例 · 按你的情况修改</span><button type="button" class="copy-button" data-copy="command-2" aria-label="复制档案示例">复制</button></div><pre><code id="command-2">profile create 运营负责人
 我做运营，想读懂订单方案。开发术语不熟悉，

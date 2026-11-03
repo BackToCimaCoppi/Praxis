@@ -37,11 +37,22 @@ AI 也不知道你已经懂什么。要求它“简短”，可能只剩术语�
 
 ## 怎么用
 
-从仓库下载后，把完整的 `skills/read-together/` 目录放到 `~/.agents/skills/`。
-它独立使用，不需要安装其他 Praxis skill。
-使用能加载该目录、读取材料并操作本机文件的 Agent 工具；工具未发现技能时，先按其说明重新加载或新建会话。
+[Praxis](https://github.com/BackToCimaCoppi/Praxis) 是一个开源 AI 技能库，把阅读、设计、开发、测试等常用做法整理成可复用的工作指南。
+[read-together（长文共读）](https://github.com/BackToCimaCoppi/Praxis/tree/main/skills/read-together) 是其中一个技能，可以单独安装。
 
-在聊天中开始：
+**先安装。** 打开支持本地技能、能联网和读写本机文件的 AI 工具，把下面这段话发给它：
+
+```text
+请从 https://github.com/BackToCimaCoppi/Praxis
+安装 skills/read-together 这个技能。
+将完整目录保存到 ~/.agents/skills/read-together/，只安装这一个技能。
+请检查当前工具能否识别它；如果需要额外配置或重新加载，请告诉我怎么做。
+```
+
+也可以打开 GitHub 项目，点击 **Code → Download ZIP**，解压后把完整的 `skills/read-together/` 目录复制到 `~/.agents/skills/`。
+不同工具的技能发现方式可能不同，按其说明完成配置或重新加载。普通网页聊天如果没有本机文件权限，就不能替你安装。
+
+**再开始阅读。** 确认工具已识别技能后，在聊天中输入（不是终端命令）：
 
 ```text
 $read-together read <文档路径、附件或链接>
