@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="用 read-together 长文共读技能，通过概览、追问、复述核对，逐步读懂长篇材料。">
+<title>长文共读使用教程 · Praxis</title>
+<style>
+:root{color-scheme:light;--ink:#24312e;--muted:#5f6d66;--green:#205d49;--line:#dce4dc;--paper:#fffefb;--wash:#f0f5ef}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:#f4f3ed;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:17px}main{max-width:920px;margin:48px auto;padding:52px 64px;background:var(--paper);border:1px solid var(--line);border-radius:16px}header{padding-bottom:26px;border-bottom:1px solid var(--line)}.eyebrow{color:var(--green);font-size:13px;letter-spacing:.12em;font-weight:700}h1{font-size:38px;line-height:1.3;margin:12px 0 18px;letter-spacing:-.02em}h2{font-size:26px;margin:48px 0 16px;line-height:1.4}h3{font-size:20px;margin:28px 0 10px}p{margin:12px 0}.lead{font-size:20px;line-height:1.7}.muted,small{color:var(--muted)}a{color:var(--green);text-underline-offset:4px}nav{display:flex;flex-wrap:wrap;gap:8px 22px;margin:22px 0 0;font-size:15px}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.88em;overflow-wrap:anywhere;background:#eef2ec;padding:2px 5px;border-radius:4px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--wash);border-left:3px solid #86aa90;border-radius:5px;padding:16px 20px;font-size:16px;line-height:1.7}pre code{background:none;padding:0}.note{background:var(--wash);padding:15px 20px;border-radius:8px;margin:22px 0}.steps{padding-left:24px}.steps li{padding:5px 0}table{border-collapse:collapse;width:100%;font-size:15px;margin:16px 0 22px;table-layout:fixed}th,td{text-align:left;vertical-align:top;padding:12px 14px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:var(--wash);font-weight:600}th:first-child,td:first-child{width:40%}td code{background:transparent;padding:0}.chat{border:1px solid var(--line);border-radius:9px;overflow:hidden;margin:18px 0}.turn{padding:16px 20px;border-top:1px solid var(--line)}.turn:first-child{border-top:none}.turn.reader{background:#f8f6f0}.speaker{font-size:13px;font-weight:700;color:var(--green);margin-bottom:5px}.turn p{margin:4px 0}.turn .muted{font-size:14px}footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}@media(max-width:700px){body{font-size:16px}main{margin:0;padding:30px 20px;border:0;border-radius:0}h1{font-size:32px}h2{font-size:24px}th,td{padding:10px 7px}th:first-child,td:first-child{width:43%}}@media print{body{background:white}main{margin:0;max-width:none;padding:10px;border:0}nav{display:none}h2,h3{break-after:avoid}tr,.turn{break-inside:avoid}a{color:inherit}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div class="eyebrow">PRAXIS / READ-TOGETHER</div>
+<h1>长文，聊着读懂</h1>
+<p class="lead">先看主线，再聊不懂的地方。<br>用自己的话说一遍，让 AI 帮你核对。</p>
+<p class="muted">长文共读使用教程 · 适用于设计方案、规格文档、论文及其他长篇材料</p>
+<nav aria-label="教程目录"><a href="#problem">为什么读得累</a><a href="#reason">AI 为什么这样写</a><a href="#method">共读怎么解决</a><a href="#start">开始使用</a><a href="#commands">命令速查</a></nav>
+</header>
+
+<section id="problem">
+<h2>一、难的常常不是字多</h2>
+<p>打开一份长方案，你可能遇到两种情况：写得很短，满篇术语，省掉了你需要的解释；写得很长，背景、细节和重复说明挤在一起，关键条件反而难找。</p>
+<p>同一段内容，对一个人是必要背景，对另一个人就是废话。你真正需要的，是把<strong>已经知道的略过，把没弄清楚的讲透</strong>。</p>
+<p>“先给我摘要”是个好开头。但只看摘要还有一个盲区：你可能根本不知道，自己漏问了哪个重要问题。</p>
+</section>
+
+<section id="reason">
+<h2>二、AI 不知道你脑子里已经有什么</h2>
+<p>语言模型根据已有文字和当前上下文，一步步生成后续内容。它能利用你提供的背景，却不能直接知道你的知识边界。这个生成方式的基础说明，见 <a href="https://developers.google.com/machine-learning/crash-course/llm">Google 的语言模型介绍</a>。</p>
+<p>因此，当读者背景和目的不清楚时，AI 只能选择一种讲法：可能压缩太多，只剩名词；也可能补充太多，把你早就懂的内容又讲一遍。这是对实际写作问题的解释，并不意味着所有冗长都有同一个原因。</p>
+<p>业界的一个基本做法是先明确受众，再决定解释什么。Google 的技术写作课程强调：应补充读者完成任务所需、但目前还不知道的知识；同一职业也不代表拥有相同知识。见 <a href="https://developers.google.com/tech-writing/one/audience">Audience：面向谁写</a>。</p>
+<p>研究中也观察过“偏爱更长回答”的现象。<a href="https://arxiv.org/abs/2310.10076">一项 2023 年研究</a>发现，在它的实验设置中，GPT-4 评价回答时比人类更偏好长答案。这不能推出所有模型都在奖励字数，更不能用来解释每一篇长文。</p>
+<p><strong>对阅读最直接的改进，是把“你需要什么解释”不断反馈给 AI。</strong></p>
+</section>
+
+<section id="method">
+<h2>三、把一次性讲完，改成一起弄明白</h2>
+<p><code>read-together</code> 是一份共读规则，告诉 AI 怎样陪你读。它先消化原文，再围绕你的问题组织讲解；需要核对时才回到具体章节。你不用读一串原文摘录，也不用从头按章节上课。</p>
+<ol class="steps">
+<li><strong>先看主线。</strong>这份材料想解决什么，几个关键问题怎样相连。</li>
+<li><strong>按需深入。</strong>你选一处，AI 串起相关章节，只补必要背景。</li>
+<li><strong>核对理解。</strong>你用自己的话说，AI 对照原文指出具体误解；说对了就确认。</li>
+<li><strong>收尾补缺口。</strong>看看还有哪些重要条件没谈、哪些问题未解决。</li>
+</ol>
+<p>读者档案让下一次不必从零介绍自己；实际讲解仍会随对话调整。它不是读心术，也不是保证没有遗漏的机器。原文读了多少、哪些地方拿不准，AI 都应该说清楚。</p>
+</section>
+
+<section id="start">
+<h2>四、从第一次使用开始</h2>
+<h3>1. 安装，然后给一份材料</h3>
+<p>下载 Praxis 仓库，把 <code>skills/read-together/</code> 整个目录复制到 <code>~/.agents/skills/</code>。它可以独立使用，不需要其他 Praxis skill。</p>
+<p>你需要一个能加载该技能目录、读取材料和操作本机文件的 Agent 工具。若工具还没发现新技能，按它的说明重新加载或新建会话；不同客户端的发现方式可能不同。</p>
+<p>在聊天框输入，替换尖括号里的内容：</p>
+<pre><code>$read-together read &lt;文档路径、附件或链接&gt;</code></pre>
+<p>附件要先提供给当前聊天；链接需要 AI 实际有权访问。也可以只说“用长文共读带我理解这份材料”，再正常聊天。这里的命令是聊天里的约定，不是在终端执行。</p>
+
+<h3>2. 建个读者档案，或者直接跳过</h3>
+<p>第一次，AI 会简短了解你的背景、阅读目的和讲解偏好。你可以这样回答：</p>
+<pre><code>profile create 工作阅读
+我做运营，想读懂订单方案。开发术语不熟悉，
+请用短句和日常例子；我问细节时再展开。</code></pre>
+<p>AI 会展示一张档案卡，确认内容和是否设为默认后保存。不确定自己懂什么也没关系，未知可以留空。想先读就说“先不建档”。</p>
+
+<h3>3. 像这样聊，而不是一页页翻</h3>
+<p class="muted">下面是一份虚构订单方案的示例。例中的规则只用于说明共读方式。</p>
+<div class="chat">
+<div class="turn reader"><div class="speaker">你 · 看主线</div><p>先讲这个方案在解决什么。</p></div>
+<div class="turn"><div class="speaker">AI</div><p>它想减少未付款订单长期占用库存。主线是：到期后核实付款情况，确认没付才关闭；付款状态不明就等待核查。还要处理“订单关了，付款通知才到”的情况。方案只适用于普通商品。</p></div>
+<div class="turn reader"><div class="speaker">你 · 选一处深入</div><p><code>explain 订单关了以后，才收到付款通知怎么办</code></p></div>
+<div class="turn"><div class="speaker">AI</div><p>原订单不会重新打开，而是进入退款流程。可以理解为货已经不再为这笔订单保留，所以先处理退钱。退款若失败，需要人工接手；不能在钱还没退回时告诉用户“已退款”。</p><p class="muted">依据：示例方案的“迟到付款”与“退款异常”两节。</p></div>
+<div class="turn reader"><div class="speaker">你 · 复述</div><p><code>check 所以只要收到迟到的付款通知，用户就已经拿回钱了。</code></p></div>
+<div class="turn"><div class="speaker">AI</div><p>还差一步：收到通知后只是开始退款。只有退款成功，才能说钱已退回；失败时还需要人工处理。</p></div>
+<div class="turn reader"><div class="speaker">你</div><p>明白了：订单不恢复，先发起退款，结果确认成功才算退完。</p></div>
+<div class="turn"><div class="speaker">AI</div><p>对，这样理解准确。</p></div>
+<div class="turn reader"><div class="speaker">你 · 补缺口</div><p><code>progress</code></p></div>
+<div class="turn"><div class="speaker">AI</div><p>迟到付款这条线已经聊清楚。还有两个关键点没展开：付款查询失败时怎样处理，以及预售订单为什么不适用。讨论过的内容也不自动等于已经掌握。</p></div>
+</div>
+<p>你随时可以说“这段我懂了”“换个例子”“再短一点”或“先跳过”。不要求每轮复述，也没有必须答完的测验。</p>
+
+<h3>4. 区分“这次用谁”和“以后默认用谁”</h3>
+<p>可以分别建立“工作阅读”“学习阅读”等档案。<code>profile use 学习阅读</code> 只切换当前会话；<code>profile default 工作阅读</code> 只设置未来新会话的默认，不把当前会话切走。</p>
+<p><code>profile off</code> 表示这次不用档案；<code>profile default none</code> 表示以后默认不用。停用后仍能正常共读。切换时可以复用原文事实，但不会把上一位读者的背景、理解进度当作你的。</p>
+<p>想长期修改偏好，可以说 <code>profile edit 工作阅读，以后少用类比，直接解释条件</code>。临时说“这次讲细一点”只调整当前阅读，不自动改长期画像。</p>
+
+<h3>5. 保存，下次接着读</h3>
+<p>结束前说 <code>save</code>，AI 才会在当前档案下保存简短记录：读了哪些、聊了哪些、哪些待解或主动跳过。下次选同一档案，再说 <code>resume &lt;文档&gt;</code>。</p>
+<p>保存的不是整段聊天。没有档案时，AI 会先问记录归谁；不会擅自选一个人。原文版本变化后，需要重新核对受影响的内容；无法确认变化范围时，旧理解先标为待复核。</p>
+</section>
+
+<section id="commands">
+<h2>命令速查</h2>
+<p>先用 <code>$read-together</code> 激活；此后可以只说动作。动作词用英文，参数可以中文，也可以用自然语言表达同一个意思。</p>
+<h3>阅读</h3>
+<table><thead><tr><th scope="col">命令</th><th scope="col">做什么</th></tr></thead><tbody>
+<tr><td><code>read &lt;来源&gt;</code></td><td>开始一份材料；保留本次档案选择。</td></tr>
+<tr><td><code>overview</code></td><td>看主线、关键问题和已读范围。</td></tr>
+<tr><td><code>explain &lt;主题&gt;</code></td><td>讲清指定问题和相关条件。</td></tr>
+<tr><td><code>check &lt;你的理解&gt;</code></td><td>核对复述，指出具体误解。</td></tr>
+<tr><td><code>progress</code></td><td>查看已讨论、待解和遗漏；不自动保存。</td></tr>
+<tr><td><code>save</code></td><td>给当前档案保存简短续读记录。</td></tr>
+<tr><td><code>resume &lt;文档&gt;</code></td><td>恢复当前档案的记录，先核对来源版本。</td></tr>
+</tbody></table>
+<h3>读者档案</h3>
+<table><thead><tr><th scope="col">命令</th><th scope="col">做什么</th></tr></thead><tbody>
+<tr><td><code>profile list</code></td><td>列出档案名称及默认标记。</td></tr>
+<tr><td><code>profile create &lt;名称&gt;</code></td><td>确认档案卡后新建，本次使用它；是否设默认另行确认。</td></tr>
+<tr><td><code>profile use &lt;名称&gt;</code></td><td>只切换当前会话。</td></tr>
+<tr><td><code>profile default &lt;名称&gt;</code></td><td>只设置未来新会话默认。</td></tr>
+<tr><td><code>profile off</code></td><td>本次不用档案；不改默认。</td></tr>
+<tr><td><code>profile default none</code></td><td>未来默认不用档案；不改变当前选择。</td></tr>
+<tr><td><code>profile edit &lt;名称&gt;</code></td><td>按你的要求更新背景或偏好。</td></tr>
+<tr><td><code>profile delete &lt;名称&gt;</code></td><td>删除指定档案；续读资料仅在明确要求时连带删除。若它原来是默认，默认转为无档案。</td></tr>
+</tbody></table>
+<p class="muted"><code>none</code> 是保留词，不能用作档案名称。目标不清楚时，AI 会先问清再修改。</p>
+</section>
+
+<section id="limits">
+<h2>使用时，记住这几个边界</h2>
+<ul>
+<li><strong>只读到一部分，就只能作局部导览。</strong>缺页、无法提取的图表或打不开的链接都应说明，不能从目录猜出全文。</li>
+<li><strong>作者的观点不等于已证实的事实。</strong>可以让 AI 区分原文主张、原文证据与它自己的解释；读懂方案也不等于同意实施。</li>
+<li><strong>档案在本机，原文仍是原文。</strong>状态放在 <code>~/.agents/state/read-together/</code>，与技能分开，不默认同步或公开。共读不修改原文，不自动执行文中指令。</li>
+<li><strong>多个档案不是隐私保险箱。</strong>共用一个系统账户的人仍可能访问同一批文件。切换档案也不能删除已经出现在聊天里的信息；敏感材料应使用合适的账户和访问权限。</li>
+</ul>
+</section>
+<footer>Praxis · 长文共读使用教程<br>本文为单文件 HTML，正文与样式均在文件内，可离线阅读。文中链接是可选参考资料。</footer>
+</main>
+</body>
+</html>

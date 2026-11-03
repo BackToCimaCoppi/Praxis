@@ -5,7 +5,7 @@
 
 ![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
 ![Docs](https://img.shields.io/badge/docs-简体中文-red.svg)
-![Skills](https://img.shields.io/badge/skills-25-green.svg)
+![Skills](https://img.shields.io/badge/skills-26-green.svg)
 
 ---
 
@@ -105,6 +105,7 @@ cp -R skills/adversarial-review ~/.agents/skills/
 | [doc-layer-system](docs/doc-layer-system.md) | 七层文档体系引擎 🐎 三驾马车·招牌 | 想给项目建立"代码与文档不脱节"的分层治理体系 |
 | [docs-from-code](docs/docs-from-code.md) | 从代码反推 L1 需求文档 | 老项目没需求文档，要从现有代码补回来 |
 | [long-doc-governance](docs/long-doc-governance.md) | 长文档拆分治理 | 单个文档越写越长、该拆了 |
+| [read-together](docs/read-together.md) | 通过聊天逐步读懂长文，核对理解并补足遗漏 | 阅读设计方案、规格、论文或其他长篇材料 |
 
 ### 🔍 冷启动 / 反推
 | Skill | 一句话 | 用在什么场景 |
